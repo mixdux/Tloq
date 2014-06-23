@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.pedagogijadidaktikarad.GlavnaAktivnost"
+    tools:ignore="MergeRootFrame" >
+
+    <Button
+        android:id="@+id/jbOdgovor3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/jbOdgovor4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp"
+        android:text="Odgovaraj na pitanja" />
+
+    <Button
+        android:id="@+id/jbOdgovor4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="174dp"
+        android:text="Snimi novo pitanje" />
+
+    <Button
+        android:id="@+id/jbListaPitanja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/jbOdgovor3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:text="Lista pitanja" />
+
+</RelativeLayout>

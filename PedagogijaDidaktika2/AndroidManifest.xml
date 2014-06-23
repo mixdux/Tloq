@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.pedagogijadidaktika2"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.lockscreentest.MainActivity"
+            android:label="@string/title_activity_main_activity"
+            android:noHistory="true" >
+            <intent-filter>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.lockscreentest.LockScreen"
+            android:label="@string/title_activity_lock_screen" >
+        </activity>
+
+        <service android:name="com.example.lockscreentest.TestService" >
+        </service>
+
+        <receiver android:name="com.example.lockscreentest.UnstoppableReciever" >
+            <intent-filter>
+                <action android:name="lockServiceStopped" />
+                <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.example.lockscreentest.ScreenReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.example.pedagogijadidaktikarad.PitanjeAktivnost"
+            android:label="@string/title_activity_pitanje_aktivnost" >
+        </activity>
+        <activity
+            android:name="com.example.pedagogijadidaktikarad.GlavnaAktivnost"
+            android:label="@string/app_name" >
+"
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.pedagogijadidaktikarad.UcitajPitanjeAktivnost"
+            android:label="@string/title_activity_ucitaj_pitanje_aktivnost" >
+        </activity>
+        <activity
+            android:name="com.example.pedagogijadidaktika2.PregledPitanja"
+            android:label="@string/title_activity_pregled_pitanja" >
+        </activity>
+    </application>
+
+</manifest>

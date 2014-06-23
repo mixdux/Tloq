@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PedagogijaDidaktika2</string>
+    <string name="title_activity_lock_screen"> Naslov </string>
+    <string name="title_activity_pitanje_aktivnost">Pitanje Aktivnost</string>
+    <string name="title_activity_ucitaj_pitanje_aktivnost">Ucitaj Pitanje</string>
+    <string name="title_activity_main_activity">MainActivity</string>
+    <string name="title_activity_pregled_pitanja">PregledPitanja</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+</resources>

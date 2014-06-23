@@ -1,0 +1,125 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.pedagogijadidaktikarad.UcitajPitanjeAktivnost"
+    tools:ignore="MergeRootFrame" 
+    android:focusable="true" 
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Unesite tekst pitanja ispod:" />
+
+    <EditText
+        android:id="@+id/etTekstPitanja"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:ems="10"
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/etOdgovor1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:ems="10" />
+
+    <EditText
+        android:id="@+id/etOdgovor2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/etOdgovor1"
+        android:ems="10" />
+
+    <EditText
+        android:id="@+id/etOdgovor3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/etOdgovor2"
+        android:ems="10" />
+
+    <EditText
+        android:id="@+id/etOdgovor4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/etOdgovor3"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/etOdgovor1"
+        android:layout_alignParentLeft="true"
+        android:text="Unesite tekst odgovora u polja ispod, izborom radio dugmeta obelezavate tacan odgovor." />
+
+    <RadioGroup
+        android:id="@+id/rgTacanOdgovor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/etOdgovor4"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/etOdgovor1"
+        android:layout_toRightOf="@id/etOdgovor4"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2" />
+
+        <RadioButton
+            android:id="@+id/RadioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3" />
+
+        <RadioButton
+            android:id="@+id/RadioButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/bSacuvajPitanje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/rgTacanOdgovor"
+        android:layout_marginBottom="11dp"
+        android:layout_marginRight="34dp"
+        android:text="Snimi" />
+
+    <Button
+        android:id="@+id/bNazad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bSacuvajPitanje"
+        android:layout_alignBottom="@+id/bSacuvajPitanje"
+        android:layout_toRightOf="@+id/textView1"
+        android:text="Nazad" />
+
+</RelativeLayout>
