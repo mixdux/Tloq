@@ -1,26 +1,18 @@
 package com.example.pedagogijadidaktikarad;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 import com.example.pedagogijadidaktika2.R;
 
 import poslovnaLogika.DatabaseBroker;
-import poslovnaLogika.DatabseCreator;
-import poslovnaLogika.KolekcijaPitanja;
-
-
-
-
-
-
 import domen.Pitanje;
 import domen.PitanjeStat;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class UcitajPitanjeAktivnost extends Activity {
@@ -40,8 +31,6 @@ public class UcitajPitanjeAktivnost extends Activity {
 	final String TAG = "PedagogijaSaDidaktikom";
 	private Activity trenutniActivity;
 
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		trenutniActivity = this;
@@ -54,14 +43,16 @@ public class UcitajPitanjeAktivnost extends Activity {
 		final EditText tvOdg3 = (EditText) findViewById(R.id.etOdgovor3);
 		final EditText tvOdg4 = (EditText) findViewById(R.id.etOdgovor4);
 		final EditText tvRazrada = (EditText) findViewById(R.id.etRazrada);
-		
+
 		rootView.setOnTouchListener(new View.OnTouchListener() {
-			
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				InputMethodManager inputMethodManager = (InputMethodManager)  trenutniActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-			    inputMethodManager.hideSoftInputFromWindow(trenutniActivity.getCurrentFocus().getWindowToken(), 0);
-			    skiniFocusSaSvih();
+				InputMethodManager inputMethodManager = (InputMethodManager) trenutniActivity
+						.getSystemService(Activity.INPUT_METHOD_SERVICE);
+				inputMethodManager.hideSoftInputFromWindow(trenutniActivity
+						.getCurrentFocus().getWindowToken(), 0);
+				skiniFocusSaSvih();
 				return false;
 			}
 
@@ -75,7 +66,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 				tvRazrada.clearFocus();
 			}
 		});
-		
+
 		bSacuvaj = (Button) findViewById(R.id.bSacuvajPitanje);
 		bSacuvaj.setOnClickListener(new OnClickListener() {
 
@@ -83,21 +74,21 @@ public class UcitajPitanjeAktivnost extends Activity {
 			public void onClick(View v) {
 
 				boolean tacno = false;
-				
+
 				mTekstPitanje = tvPitanje.getText().toString();
-				odg1 = tvOdg1.getText().toString();				
+				odg1 = tvOdg1.getText().toString();
 				odg2 = tvOdg2.getText().toString();
 				odg3 = tvOdg3.getText().toString();
 				odg4 = tvOdg4.getText().toString();
 				razrada = tvRazrada.getText().toString();
 				tac = "";
-				
 
 				RadioGroup rgTacanOdgovor = (RadioGroup) findViewById(R.id.rgTacanOdgovor);
 				if (rgTacanOdgovor.getCheckedRadioButtonId() != -1) {
-					int idSelektovanog = rgTacanOdgovor.getCheckedRadioButtonId();
+					int idSelektovanog = rgTacanOdgovor
+							.getCheckedRadioButtonId();
 					RadioButton selektovanoDugme = (RadioButton) findViewById(idSelektovanog);
-					tac = selektovanoDugme.getText().toString();					
+					tac = selektovanoDugme.getText().toString();
 					tacno = true;
 				} else
 					Toast.makeText(getApplicationContext(),
@@ -113,7 +104,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 							Toast.LENGTH_LONG).show();
 
 				} else {
-				SacuvajPitanje();
+					SacuvajPitanje();
 				}
 
 			}
@@ -121,24 +112,27 @@ public class UcitajPitanjeAktivnost extends Activity {
 			private void SacuvajPitanje() {
 				Intent data = new Intent();
 				String[] odgovori = { tac, odg1, odg2, odg3, odg4 };
-				Log.e("XYZ",mTekstPitanje
-						+ odgovori[0] + odgovori[1]+ odgovori[2]+ odgovori[3]+ odgovori[4]);
-				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, "ADMIN<dsc>_M</dsc>");
+				Log.e("XYZ", mTekstPitanje + odgovori[0] + odgovori[1]
+						+ odgovori[2] + odgovori[3] + odgovori[4]);
+				String kreator = "ADMIN<dsc>_M</dsc>";
+				String auid = napraviAUID();
+				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, kreator,
+						auid);
 				pitanje.setPojasnjenje(razrada);
 
-				
-				/*if (!databas.exists()) {
-					// Database does not exist so copy it from assets here
-					Log.i("Database", "Not Found");
-				} else {
-					Log.i("Database", "Found");
-				}*/
+				/*
+				 * if (!databas.exists()) { // Database does not exist so copy
+				 * it from assets here Log.i("Database", "Not Found"); } else {
+				 * Log.i("Database", "Found"); }
+				 */
 				PitanjeStat novoPitanje = new PitanjeStat(pitanje);
 				try {
-					DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
+					DatabaseBroker dbb = new DatabaseBroker(
+							getApplicationContext());
 					dbb.dodajPitanje(novoPitanje);
 				} catch (Exception ex) {
-					Toast.makeText(getApplicationContext(), "Nesto je poslo po zlu sa cuvanjem fajla",
+					Toast.makeText(getApplicationContext(),
+							"Nesto je poslo po zlu sa cuvanjem fajla",
 							Toast.LENGTH_LONG).show();
 				}
 				data.putExtra("myobj", novoPitanje);
@@ -158,6 +152,14 @@ public class UcitajPitanjeAktivnost extends Activity {
 						Toast.LENGTH_LONG).show();
 			}
 		});
+
+	}
+
+	private String napraviAUID() {
+		String auid = "";
+		auid += new SimpleDateFormat("ddMMyyyy").format(new Date()) + "-";
+		auid += java.util.UUID.randomUUID();
+		return auid;
 
 	}
 

@@ -13,7 +13,18 @@ public class Pitanje implements Serializable{
 	private String kreator;
 	private String pojasnjenje;
 	private String notes;
+	private String jedinstveniIDikada;
 	
+	public void setJedinstveniIDikada(String jedinstveniIDikada) {
+		if (this.jedinstveniIDikada.equals("")){
+		this.jedinstveniIDikada = jedinstveniIDikada;
+		}
+	}
+
+	public String getJedinstveniIDikada() {
+		return jedinstveniIDikada;
+	}
+
 	public String getNotes() {
 		return notes;
 	}
@@ -31,7 +42,7 @@ public class Pitanje implements Serializable{
 	}
 
 	public String getKreator() {
-		return userFriendlyKreator();
+		return userFriendlyKreator(kreator);
 	}
 
 	public void setKreator(String kreator) {
@@ -56,20 +67,22 @@ public class Pitanje implements Serializable{
 
 	
 	
-	public Pitanje(String mTextPitanja, String[] odgovori, String kreator) {
+	public Pitanje(String mTextPitanja, String[] odgovori, String kreator, String auid) {
 		super();
 		this.mTextPitanja = mTextPitanja;
 		this.odgovori = odgovori;
 		this.kreator = kreator;
 		this.pojasnjenje = "";
 		this.notes = "";
+		jedinstveniIDikada = auid;
 	}
 	
 	public Pitanje(){
 		odgovori = new  String[5];
+		jedinstveniIDikada = "";
 	}
 	
-	private String userFriendlyKreator(){
+	public static String userFriendlyKreator(String kreator){
 		String [] kreatorUF = kreator.split("<dsc>(.+?)</dsc>");
 		String kuf = "";
 		for (String kre : kreatorUF){

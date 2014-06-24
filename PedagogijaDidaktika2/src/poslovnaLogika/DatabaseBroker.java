@@ -32,7 +32,7 @@ public class DatabaseBroker {
 		values.put(DatabseCreator.CETVRTI_ODGOVOR, pitanje.getPitanje().getOdgovori()[4]);
 		values.put(DatabseCreator.KREATOR, pitanje.getPitanje().getKreator());
 		values.put(DatabseCreator.POJASNJENJE, pitanje.getPitanje().getPojasnjenje());
-		
+		values.put(DatabseCreator.ALLUNIQUE, pitanje.getPitanje().getJedinstveniIDikada());
 		if (pitanje.isAktivno()){
 			values.put(DatabseCreator.AKTIVNO, 1);
 		} else {
@@ -82,6 +82,7 @@ public class DatabaseBroker {
 				pit.setKreator(cursor.getString(8));
 				pit.setPojasnjenje(cursor.getString(12));
 				pit.setNotes(cursor.getString(13));
+				pit.setJedinstveniIDikada(cursor.getString(14));
 				PitanjeStat pitStat = new PitanjeStat(pit);
 				pitStat.setBrojTacnihOdgovora(cursor.getInt(9));
 				pitStat.setBrojNetacnihOdgovora(cursor.getInt(10));

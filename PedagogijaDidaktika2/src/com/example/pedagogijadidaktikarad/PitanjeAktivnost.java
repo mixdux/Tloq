@@ -1,5 +1,6 @@
 package com.example.pedagogijadidaktikarad;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -79,6 +80,8 @@ public class PitanjeAktivnost extends Activity {
 		
 		int now = (int) System.currentTimeMillis();
 		
+		final List<Integer> pushedAnswers = new ArrayList<Integer>();
+		
 		bOdgovor1.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -92,6 +95,10 @@ public class PitanjeAktivnost extends Activity {
 					}
 					finish();
 				} else {
+					if (!pushedAnswers.contains(1)){
+						pushedAnswers.add(1);
+						
+					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
 							Toast.LENGTH_SHORT).show();
 				}
