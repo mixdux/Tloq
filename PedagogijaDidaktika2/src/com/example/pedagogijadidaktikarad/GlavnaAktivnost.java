@@ -15,6 +15,7 @@ import com.example.pedagogijadidaktika2.R;
 
 import util.*;
 import domen.Pitanje;
+import domen.PitanjeStat;
 import poslovnaLogika.DatabaseBroker;
 import poslovnaLogika.KolekcijaPitanja;
 import poslovnaLogika.KolekcijaStatPitanja;
@@ -103,7 +104,7 @@ public class GlavnaAktivnost extends Activity {
 		bKaListiPitanja.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (Kontroler.vratiObjekat().getKolekcijaPitanja()
+				if (Kontroler.vratiObjekat().getKolekcijaStatPitanja()
 						.BrojPitanja() == 0) {
 					Toast.makeText(getApplicationContext(),
 							"Pitanja nisu učitana, molimo učitajte.",
@@ -120,7 +121,7 @@ public class GlavnaAktivnost extends Activity {
 	public KolekcijaStatPitanja UcitajPitanja() throws Exception {
 		try {
 			DatabaseBroker dbb = new DatabaseBroker(this);
-			return new KolekcijaStatPitanja(dbb.vratiSvaPitanja());
+			return new KolekcijaStatPitanja(dbb.vratiSvaPitanja(true));
 		} catch (Exception ex) {
 			throw new Exception("Nesto je poslo po zlu sa ucitavanjem fajla");
 		}
@@ -130,8 +131,8 @@ public class GlavnaAktivnost extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == 1) {
 			if (resultCode == RESULT_OK) {
-				Pitanje pitanje = (Pitanje) data.getSerializableExtra("myobj");
-				Kontroler.vratiObjekat().dodajPitanje(pitanje);
+				PitanjeStat pitanje = (PitanjeStat) data.getSerializableExtra("myobj");
+				Kontroler.vratiObjekat().dodajStatPitanje(pitanje);
 			}
 			if (resultCode == RESULT_CANCELED) {
 				// Write your code if there's no result

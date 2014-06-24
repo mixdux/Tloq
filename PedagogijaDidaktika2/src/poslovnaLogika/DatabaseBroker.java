@@ -22,16 +22,26 @@ public class DatabaseBroker {
 		database = dbHelper.getWritableDatabase();
 	}
 
-	public void dodajPitanje(Pitanje pitanje) {
+	public void dodajPitanje(PitanjeStat pitanje) {
 		ContentValues values = new ContentValues();
-		values.put(DatabseCreator.TEXT_PITANJA, pitanje.getmTextPitanja());
-		values.put(DatabseCreator.TACAN_ODGOVOR, pitanje.getOdgovori()[0]);
-		values.put(DatabseCreator.PRVI_ODGOVOR, pitanje.getOdgovori()[1]);
-		values.put(DatabseCreator.DRUGI_ODGOVOR, pitanje.getOdgovori()[2]);
-		values.put(DatabseCreator.TRECI_ODGOVOR, pitanje.getOdgovori()[3]);
-		values.put(DatabseCreator.CETVRTI_ODGOVOR, pitanje.getOdgovori()[4]);
-		values.put(DatabseCreator.KREATOR, pitanje.getKreator());
-
+		values.put(DatabseCreator.TEXT_PITANJA, pitanje.getPitanje().getmTextPitanja());
+		values.put(DatabseCreator.TACAN_ODGOVOR, pitanje.getPitanje().getOdgovori()[0]);
+		values.put(DatabseCreator.PRVI_ODGOVOR, pitanje.getPitanje().getOdgovori()[1]);
+		values.put(DatabseCreator.DRUGI_ODGOVOR, pitanje.getPitanje().getOdgovori()[2]);
+		values.put(DatabseCreator.TRECI_ODGOVOR, pitanje.getPitanje().getOdgovori()[3]);
+		values.put(DatabseCreator.CETVRTI_ODGOVOR, pitanje.getPitanje().getOdgovori()[4]);
+		values.put(DatabseCreator.KREATOR, pitanje.getPitanje().getKreator());
+		values.put(DatabseCreator.POJASNJENJE, pitanje.getPitanje().getPojasnjenje());
+		
+		if (pitanje.isAktivno()){
+			values.put(DatabseCreator.AKTIVNO, 1);
+		} else {
+			values.put(DatabseCreator.AKTIVNO, 0);
+		}
+		values.put(DatabseCreator.TACNI, pitanje.getBrojTacnihOdgovora());
+		values.put(DatabseCreator.NETACNI, pitanje.getBrojNetacnihOdgovora());
+		values.put(DatabseCreator.VREMEODGOVORA, pitanje.getVremeZaOdgovor());
+		
 		database.insert(DatabseCreator.IME_TABELE, null, values);
 		/*
 		 * int odgovoren = 0; if (pitanje.isOdgovoreno()) odgovoren = 1; String
@@ -51,10 +61,17 @@ public class DatabaseBroker {
 		database.close(); // Closing database connection
 	}
 
-	public List<PitanjeStat> vratiSvaPitanja() {
+	public List<PitanjeStat> vratiSvaPitanja(boolean samoAktivna) {
 		List<PitanjeStat> listaPitanja = new ArrayList<PitanjeStat>();
-		String selectQuery = "SELECT  * FROM " + DatabseCreator.IME_TABELE;
-		Cursor cursor = database.rawQuery(selectQuery, null);
+		String selectQuery = "";
+		Cursor cursor = null;
+		if (samoAktivna) {
+			selectQuery = "SELECT * FROM "+ DatabseCreator.IME_TABELE + " WHERE " + DatabseCreator.AKTIVNO + "=?";
+			cursor = database.rawQuery(selectQuery, new String[] { ""+1 });
+		} else {
+			selectQuery = "SELECT  * FROM " + DatabseCreator.IME_TABELE;
+			cursor = database.rawQuery(selectQuery, null);
+		}
 		if (cursor.moveToFirst()) {
 			do {
 				Pitanje pit = new Pitanje();
@@ -63,6 +80,8 @@ public class DatabaseBroker {
 						cursor.getString(3), cursor.getString(4),
 						cursor.getString(5), cursor.getString(6) });
 				pit.setKreator(cursor.getString(8));
+				pit.setPojasnjenje(cursor.getString(12));
+				pit.setNotes(cursor.getString(13));
 				PitanjeStat pitStat = new PitanjeStat(pit);
 				pitStat.setBrojTacnihOdgovora(cursor.getInt(9));
 				pitStat.setBrojNetacnihOdgovora(cursor.getInt(10));

@@ -8,10 +8,10 @@ import poslovnaLogika.Kontroler;
 
 import com.example.lockscreentest.TestService;
 import com.example.pedagogijadidaktika2.R;
-import com.example.pedagogijadidaktika2.R.string;
 
 import util.*;
 import domen.Pitanje;
+import domen.PitanjeStat;
 import android.app.Activity;
 import android.content.Intent;
 import android.opengl.Visibility;
@@ -47,8 +47,7 @@ public class PitanjeAktivnost extends Activity {
 		bpovratak = (Button) findViewById(R.id.jbPovratak);
 		Log.i(Konstante.TAG, "Povezao se sa formom");
 
-		List<Pitanje> pitanja = Kontroler.vratiObjekat().getKolekcijaPitanja()
-				.getPitanja();
+		List<PitanjeStat> pitanja = Kontroler.vratiObjekat().getKolekcijaStatPitanja().getPitanja();
 		Random rand = new Random();
 		Pitanje aktuelnoPitanje = null;
 		switch (pitanja.size()) {
@@ -57,11 +56,11 @@ public class PitanjeAktivnost extends Activity {
 					Toast.LENGTH_LONG).show();
 			return;
 		case 1:
-			aktuelnoPitanje = pitanja.get(0);
+			aktuelnoPitanje = pitanja.get(0).getPitanje();
 			break;
 		default:
 			int randomPosition = rand.nextInt(pitanja.size());
-			aktuelnoPitanje = pitanja.get(randomPosition);
+			aktuelnoPitanje = pitanja.get(randomPosition).getPitanje();
 			break;
 		}
 
@@ -77,7 +76,9 @@ public class PitanjeAktivnost extends Activity {
 		novoPitanje.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		novoPitanje.putExtra("pozvanIzGlavne", pozvanIzGlavne);
-
+		
+		long now = System.currentTimeMillis();
+		
 		bOdgovor1.setOnClickListener(new OnClickListener() {
 
 			@Override

@@ -1,6 +1,8 @@
 package domen;
 
-public class PitanjeStat{
+import java.io.Serializable;
+
+public class PitanjeStat implements Serializable{
 
 	/**
 	 * 
@@ -11,7 +13,7 @@ public class PitanjeStat{
 	private int brojNetacnihOdgovora;
 	private boolean aktivno;
 	private int vremeZaOdgovor;
-	
+
 	public int getVremeZaOdgovor() {
 		return vremeZaOdgovor;
 	}
@@ -21,10 +23,12 @@ public class PitanjeStat{
 	}
 
 	private Pitanje pitanje;
-	
-	public PitanjeStat(Pitanje pitanje){
-		brojTacnihOdgovora=0;
-		brojNetacnihOdgovora=0;
+
+	public PitanjeStat(Pitanje pitanje) {
+		brojTacnihOdgovora = 0;
+		brojNetacnihOdgovora = 0;
+		aktivno = true;
+		vremeZaOdgovor = 0;
 		this.pitanje = pitanje;
 	}
 
@@ -59,7 +63,5 @@ public class PitanjeStat{
 	public void setPitanje(Pitanje pitanje) {
 		this.pitanje = pitanje;
 	}
-	
-	
-	
+
 }

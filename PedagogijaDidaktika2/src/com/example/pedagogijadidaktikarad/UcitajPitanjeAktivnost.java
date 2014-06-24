@@ -4,17 +4,19 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
+import com.example.pedagogijadidaktika2.R;
+
 import poslovnaLogika.DatabaseBroker;
 import poslovnaLogika.DatabseCreator;
 import poslovnaLogika.KolekcijaPitanja;
 
-import com.example.pedagogijadidaktika2.R;
 
 
 
 
 
 import domen.Pitanje;
+import domen.PitanjeStat;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +36,7 @@ import android.widget.Toast;
 public class UcitajPitanjeAktivnost extends Activity {
 	private Button bSacuvaj;
 	private Button bNazad;
-	private String tac, odg1, odg2, odg3, odg4, mTekstPitanje;
+	private String tac, odg1, odg2, odg3, odg4, mTekstPitanje, razrada;
 	final String TAG = "PedagogijaSaDidaktikom";
 	private Activity trenutniActivity;
 
@@ -51,6 +53,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 		final EditText tvOdg2 = (EditText) findViewById(R.id.etOdgovor2);
 		final EditText tvOdg3 = (EditText) findViewById(R.id.etOdgovor3);
 		final EditText tvOdg4 = (EditText) findViewById(R.id.etOdgovor4);
+		final EditText tvRazrada = (EditText) findViewById(R.id.etRazrada);
 		
 		rootView.setOnTouchListener(new View.OnTouchListener() {
 			
@@ -69,6 +72,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 				tvOdg2.clearFocus();
 				tvOdg3.clearFocus();
 				tvOdg4.clearFocus();
+				tvRazrada.clearFocus();
 			}
 		});
 		
@@ -85,6 +89,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 				odg2 = tvOdg2.getText().toString();
 				odg3 = tvOdg3.getText().toString();
 				odg4 = tvOdg4.getText().toString();
+				razrada = tvRazrada.getText().toString();
 				tac = "";
 				
 
@@ -119,25 +124,24 @@ public class UcitajPitanjeAktivnost extends Activity {
 				Log.e("XYZ",mTekstPitanje
 						+ odgovori[0] + odgovori[1]+ odgovori[2]+ odgovori[3]+ odgovori[4]);
 				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, "ADMIN_M");
-				
-				File databas=getApplicationContext().getDatabasePath(DatabseCreator.DATABASE_NAME);
+				pitanje.setPojasnjenje(razrada);
 
 				
-				if (!databas.exists()) {
+				/*if (!databas.exists()) {
 					// Database does not exist so copy it from assets here
 					Log.i("Database", "Not Found");
 				} else {
 					Log.i("Database", "Found");
-				}
-				
+				}*/
+				PitanjeStat novoPitanje = new PitanjeStat(pitanje);
 				try {
 					DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
-					dbb.dodajPitanje(pitanje);
+					dbb.dodajPitanje(novoPitanje);
 				} catch (Exception ex) {
 					Toast.makeText(getApplicationContext(), "Nesto je poslo po zlu sa cuvanjem fajla",
 							Toast.LENGTH_LONG).show();
 				}
-				data.putExtra("myobj", pitanje);
+				data.putExtra("myobj", novoPitanje);
 				setResult(Activity.RESULT_OK, data);
 				finish();
 			}

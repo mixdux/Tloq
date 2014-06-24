@@ -11,7 +11,25 @@ public class Pitanje implements Serializable{
 	private String mTextPitanja;
 	private String[] odgovori;
 	private String kreator;
+	private String pojasnjenje;
+	private String notes;
 	
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public String getPojasnjenje() {
+		return pojasnjenje;
+	}
+
+	public void setPojasnjenje(String pojasnjenje) {
+		this.pojasnjenje = pojasnjenje;
+	}
+
 	public String getKreator() {
 		return kreator;
 	}
@@ -43,6 +61,8 @@ public class Pitanje implements Serializable{
 		this.mTextPitanja = mTextPitanja;
 		this.odgovori = odgovori;
 		this.kreator = kreator;
+		this.pojasnjenje = "";
+		this.notes = "";
 	}
 	
 	public Pitanje(){

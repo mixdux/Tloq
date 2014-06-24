@@ -22,6 +22,8 @@ public class DatabseCreator extends SQLiteOpenHelper {
 	public static final String TACNI= "broj_tacnih_odgovora";
 	public static final String NETACNI= "broj_netacnih_odgovora";
 	public static final String VREMEODGOVORA= "vreme_za_odgovor";
+	public static final String POJASNJENJE= "dodatne_informacije";
+	public static final String NOTES= "notes";
 	
 	private static final String DATABSE_CREATE = "CREATE TABLE "
 			+ IME_TABELE + "( "
@@ -36,7 +38,9 @@ public class DatabseCreator extends SQLiteOpenHelper {
 			+ KREATOR + " TEXT, "
 			+ TACNI + " INTEGER, "
 /*10*/		+ NETACNI + " INTEGER, "
-			+ VREMEODGOVORA + " INTEGER"
+			+ VREMEODGOVORA + " INTEGER, "
+			+ POJASNJENJE + " TEXT, "
+/*13*/		+ NOTES + " TEXT"
 			+ ");";
 
 	DatabseCreator(Context context) {
