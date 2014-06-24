@@ -54,11 +54,13 @@ public class GlavnaAktivnost extends Activity {
 			// zapocinje ucitavanje kolekcije pitanja iz fajla, ukoliko fajl ne
 			// postoji
 			// vraca null vrednost i ceka da se zavrsi ucitavanje prvog pitanja
-
 			ksp = UcitajPitanja();
-			if (ksp != null) {
+			if (ksp.BrojPitanja()!=0) {
 				Kontroler.vratiObjekat().UcitajStatPitanja(ksp);
-				Toast.makeText(this, "Pitanja uspešno učitana iz fajla",
+				Toast.makeText(this, "Pitanja uspešno učitana iz baze",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(this, "Pitanja nisu učitana iz baze",
 						Toast.LENGTH_SHORT).show();
 			}
 		} catch (Exception e) {

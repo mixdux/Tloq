@@ -21,19 +21,31 @@ public class DatabaseBroker {
 		dbHelper = new DatabseCreator(context);
 		database = dbHelper.getWritableDatabase();
 	}
+	
+	public SQLiteDatabase getDatabase() {
+		return database;
+	}
 
 	public void dodajPitanje(PitanjeStat pitanje) {
 		ContentValues values = new ContentValues();
-		values.put(DatabseCreator.TEXT_PITANJA, pitanje.getPitanje().getmTextPitanja());
-		values.put(DatabseCreator.TACAN_ODGOVOR, pitanje.getPitanje().getOdgovori()[0]);
-		values.put(DatabseCreator.PRVI_ODGOVOR, pitanje.getPitanje().getOdgovori()[1]);
-		values.put(DatabseCreator.DRUGI_ODGOVOR, pitanje.getPitanje().getOdgovori()[2]);
-		values.put(DatabseCreator.TRECI_ODGOVOR, pitanje.getPitanje().getOdgovori()[3]);
-		values.put(DatabseCreator.CETVRTI_ODGOVOR, pitanje.getPitanje().getOdgovori()[4]);
+		values.put(DatabseCreator.TEXT_PITANJA, pitanje.getPitanje()
+				.getmTextPitanja());
+		values.put(DatabseCreator.TACAN_ODGOVOR, pitanje.getPitanje()
+				.getOdgovori()[0]);
+		values.put(DatabseCreator.PRVI_ODGOVOR, pitanje.getPitanje()
+				.getOdgovori()[1]);
+		values.put(DatabseCreator.DRUGI_ODGOVOR, pitanje.getPitanje()
+				.getOdgovori()[2]);
+		values.put(DatabseCreator.TRECI_ODGOVOR, pitanje.getPitanje()
+				.getOdgovori()[3]);
+		values.put(DatabseCreator.CETVRTI_ODGOVOR, pitanje.getPitanje()
+				.getOdgovori()[4]);
 		values.put(DatabseCreator.KREATOR, pitanje.getPitanje().getKreator());
-		values.put(DatabseCreator.POJASNJENJE, pitanje.getPitanje().getPojasnjenje());
-		values.put(DatabseCreator.ALLUNIQUE, pitanje.getPitanje().getJedinstveniIDikada());
-		if (pitanje.isAktivno()){
+		values.put(DatabseCreator.POJASNJENJE, pitanje.getPitanje()
+				.getPojasnjenje());
+		values.put(DatabseCreator.ALLUNIQUE, pitanje.getPitanje()
+				.getJedinstveniIDikada());
+		if (pitanje.isAktivno()) {
 			values.put(DatabseCreator.AKTIVNO, 1);
 		} else {
 			values.put(DatabseCreator.AKTIVNO, 0);
@@ -41,7 +53,7 @@ public class DatabaseBroker {
 		values.put(DatabseCreator.TACNI, pitanje.getBrojTacnihOdgovora());
 		values.put(DatabseCreator.NETACNI, pitanje.getBrojNetacnihOdgovora());
 		values.put(DatabseCreator.VREMEODGOVORA, pitanje.getVremeZaOdgovor());
-		
+
 		long i = database.insert(DatabseCreator.IME_TABELE, null, values);
 		/*
 		 * int odgovoren = 0; if (pitanje.isOdgovoreno()) odgovoren = 1; String
@@ -66,8 +78,9 @@ public class DatabaseBroker {
 		String selectQuery = "";
 		Cursor cursor = null;
 		if (samoAktivna) {
-			selectQuery = "SELECT * FROM "+ DatabseCreator.IME_TABELE + " WHERE " + DatabseCreator.AKTIVNO + "=?";
-			cursor = database.rawQuery(selectQuery, new String[] { ""+1 });
+			selectQuery = "SELECT * FROM " + DatabseCreator.IME_TABELE
+					+ " WHERE " + DatabseCreator.AKTIVNO + "=?";
+			cursor = database.rawQuery(selectQuery, new String[] { "" + 1 });
 		} else {
 			selectQuery = "SELECT  * FROM " + DatabseCreator.IME_TABELE;
 			cursor = database.rawQuery(selectQuery, null);
@@ -95,7 +108,26 @@ public class DatabaseBroker {
 				listaPitanja.add(pitStat);
 			} while (cursor.moveToNext());
 		}
+		database.close();
 		return listaPitanja;
 	}
 
+	public boolean updateOdgovor(boolean odgovor, String auid){
+		String odgovorSelekcija = DatabseCreator.NETACNI;
+		if (odgovor){
+			odgovorSelekcija = DatabseCreator.TACNI;
+		}
+		String selectQuery = "SELECT " + odgovorSelekcija +" FROM "+ DatabseCreator.IME_TABELE + " WHERE " + DatabseCreator.ALLUNIQUE + "=?";
+		Cursor cursor = database.rawQuery(selectQuery, new String[] { auid });
+		if (cursor.moveToFirst()) {
+			int brojOdgovora = cursor.getInt(0);
+			brojOdgovora++;
+			ContentValues args = new ContentValues();
+			args.put(odgovorSelekcija, brojOdgovora);
+			long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE+"=?", new String[] { auid });
+		} else {
+			return false;
+		}
+		return true;
+	}
 }

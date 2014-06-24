@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import poslovnaLogika.DatabaseBroker;
 import poslovnaLogika.KolekcijaPitanja;
 import poslovnaLogika.Kontroler;
 
@@ -48,7 +49,8 @@ public class PitanjeAktivnost extends Activity {
 		bpovratak = (Button) findViewById(R.id.jbPovratak);
 		Log.i(Konstante.TAG, "Povezao se sa formom");
 
-		List<PitanjeStat> pitanja = Kontroler.vratiObjekat().getKolekcijaStatPitanja().getPitanja();
+		List<PitanjeStat> pitanja = Kontroler.vratiObjekat()
+				.getKolekcijaStatPitanja().getPitanja();
 		Random rand = new Random();
 		Pitanje aktuelnoPitanje = null;
 		switch (pitanja.size()) {
@@ -72,16 +74,20 @@ public class PitanjeAktivnost extends Activity {
 		bOdgovor4.setText(aktuelnoPitanje.getOdgovori()[4]);
 		tacan = Integer.parseInt(aktuelnoPitanje.getOdgovori()[0]);
 
+		final String auid = aktuelnoPitanje.getJedinstveniIDikada();
+
 		final Intent novoPitanje = new Intent(getApplicationContext(),
 				PitanjeAktivnost.class);
 		novoPitanje.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 				| Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		novoPitanje.putExtra("pozvanIzGlavne", pozvanIzGlavne);
-		
+
+		final DatabaseBroker dbb = new DatabaseBroker(this);
+
 		int now = (int) System.currentTimeMillis();
-		
+
 		final List<Integer> pushedAnswers = new ArrayList<Integer>();
-		
+
 		bOdgovor1.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -93,11 +99,12 @@ public class PitanjeAktivnost extends Activity {
 						getApplicationContext().getApplicationContext()
 								.startActivity(novoPitanje);
 					}
+					dbb.updateOdgovor(true, auid);
 					finish();
 				} else {
-					if (!pushedAnswers.contains(1)){
+					if (!pushedAnswers.contains(1)) {
+						dbb.updateOdgovor(false, auid);
 						pushedAnswers.add(1);
-						
 					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
 							Toast.LENGTH_SHORT).show();
@@ -116,8 +123,13 @@ public class PitanjeAktivnost extends Activity {
 						getApplicationContext().getApplicationContext()
 								.startActivity(novoPitanje);
 					}
+					dbb.updateOdgovor(true, auid);
 					finish();
 				} else {
+					if (!pushedAnswers.contains(2)) {
+						dbb.updateOdgovor(false, auid);
+						pushedAnswers.add(2);
+					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -135,8 +147,13 @@ public class PitanjeAktivnost extends Activity {
 						getApplicationContext().getApplicationContext()
 								.startActivity(novoPitanje);
 					}
+					dbb.updateOdgovor(true, auid);
 					finish();
 				} else {
+					if (!pushedAnswers.contains(3)) {
+						dbb.updateOdgovor(false, auid);
+						pushedAnswers.add(3);
+					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -154,8 +171,13 @@ public class PitanjeAktivnost extends Activity {
 						getApplicationContext().getApplicationContext()
 								.startActivity(novoPitanje);
 					}
+					dbb.updateOdgovor(true, auid);
 					finish();
 				} else {
+					if (!pushedAnswers.contains(4)) {
+						dbb.updateOdgovor(false, auid);
+						pushedAnswers.add(4);
+					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -167,6 +189,7 @@ public class PitanjeAktivnost extends Activity {
 				@Override
 				public void onClick(View v) {
 					setResult(Activity.RESULT_OK);
+					dbb.getDatabase().close();
 					finish();
 				}
 			});
@@ -175,4 +198,5 @@ public class PitanjeAktivnost extends Activity {
 		}
 
 	}
+
 }
