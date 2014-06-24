@@ -31,6 +31,14 @@ public class PitanjeStat implements Serializable{
 		vremeZaOdgovor = 0;
 		this.pitanje = pitanje;
 	}
+	
+	public PitanjeStat(){
+		brojTacnihOdgovora = 0;
+		brojNetacnihOdgovora = 0;
+		aktivno = true;
+		vremeZaOdgovor = 0;
+		this.pitanje = new Pitanje();
+	}
 
 	public int getBrojTacnihOdgovora() {
 		return brojTacnihOdgovora;

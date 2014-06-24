@@ -48,22 +48,30 @@ public class PitanjeAktivnost extends Activity {
 		bOdgovor4 = (Button) findViewById(R.id.jbOdgovor4);
 		bpovratak = (Button) findViewById(R.id.jbPovratak);
 		Log.i(Konstante.TAG, "Povezao se sa formom");
-
+		
 		List<PitanjeStat> pitanja = Kontroler.vratiObjekat()
 				.getKolekcijaStatPitanja().getPitanja();
-		Random rand = new Random();
+		
+		if (pitanja.size()==0){
+			DatabaseBroker dbb = new DatabaseBroker(this);
+			pitanja = dbb.vratiSvaPitanja(true);
+		}
+		
+		final List<PitanjeStat> statPitanja = new ArrayList<>();
 		Pitanje aktuelnoPitanje = null;
 		switch (pitanja.size()) {
 		case 0:
 			Toast.makeText(this, "Ni jedno pitanje nije odabrano!",
 					Toast.LENGTH_LONG).show();
-			return;
+			finish();
+			break;
 		case 1:
 			aktuelnoPitanje = pitanja.get(0).getPitanje();
 			break;
 		default:
-			int randomPosition = rand.nextInt(pitanja.size());
-			aktuelnoPitanje = pitanja.get(randomPosition).getPitanje();
+			PitanjeStat statPitanje = dajRandomPitanje(pitanja);
+			aktuelnoPitanje = statPitanje.getPitanje();
+			statPitanja.add(statPitanje);
 			break;
 		}
 
@@ -100,10 +108,12 @@ public class PitanjeAktivnost extends Activity {
 								.startActivity(novoPitanje);
 					}
 					dbb.updateOdgovor(true, auid);
+					statPitanja.get(0).setBrojTacnihOdgovora(statPitanja.get(0).getBrojTacnihOdgovora()+1);
 					finish();
 				} else {
 					if (!pushedAnswers.contains(1)) {
 						dbb.updateOdgovor(false, auid);
+						statPitanja.get(0).setBrojNetacnihOdgovora(statPitanja.get(0).getBrojNetacnihOdgovora()+1);
 						pushedAnswers.add(1);
 					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
@@ -124,10 +134,12 @@ public class PitanjeAktivnost extends Activity {
 								.startActivity(novoPitanje);
 					}
 					dbb.updateOdgovor(true, auid);
+					statPitanja.get(0).setBrojTacnihOdgovora(statPitanja.get(0).getBrojTacnihOdgovora()+1);
 					finish();
 				} else {
 					if (!pushedAnswers.contains(2)) {
 						dbb.updateOdgovor(false, auid);
+						statPitanja.get(0).setBrojNetacnihOdgovora(statPitanja.get(0).getBrojNetacnihOdgovora()+1);
 						pushedAnswers.add(2);
 					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
@@ -148,10 +160,12 @@ public class PitanjeAktivnost extends Activity {
 								.startActivity(novoPitanje);
 					}
 					dbb.updateOdgovor(true, auid);
+					statPitanja.get(0).setBrojTacnihOdgovora(statPitanja.get(0).getBrojTacnihOdgovora()+1);
 					finish();
 				} else {
 					if (!pushedAnswers.contains(3)) {
 						dbb.updateOdgovor(false, auid);
+						statPitanja.get(0).setBrojNetacnihOdgovora(statPitanja.get(0).getBrojNetacnihOdgovora()+1);
 						pushedAnswers.add(3);
 					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
@@ -172,10 +186,12 @@ public class PitanjeAktivnost extends Activity {
 								.startActivity(novoPitanje);
 					}
 					dbb.updateOdgovor(true, auid);
+					statPitanja.get(0).setBrojTacnihOdgovora(statPitanja.get(0).getBrojTacnihOdgovora()+1);
 					finish();
 				} else {
 					if (!pushedAnswers.contains(4)) {
 						dbb.updateOdgovor(false, auid);
+						statPitanja.get(0).setBrojNetacnihOdgovora(statPitanja.get(0).getBrojNetacnihOdgovora()+1);
 						pushedAnswers.add(4);
 					}
 					Toast.makeText(v.getContext(), "Odgovor je netacan",
@@ -197,6 +213,19 @@ public class PitanjeAktivnost extends Activity {
 			bpovratak.setVisibility(View.INVISIBLE);
 		}
 
+	}
+	
+	private PitanjeStat dajRandomPitanje(List<PitanjeStat> pitanja){
+		while (true){
+		Random rand = new Random();
+		int randomPosition = rand.nextInt(pitanja.size());
+		PitanjeStat kandidat = pitanja.get(randomPosition);
+		int[] odgovori = new int[]{kandidat.getBrojTacnihOdgovora(),kandidat.getBrojNetacnihOdgovora()};
+		double sansaZaNEDolazenjem = (double)odgovori[0]/(odgovori[0]+odgovori[1]+pitanja.size());
+		double pogodak = Math.random();
+		if ((sansaZaNEDolazenjem-pogodak)<=0)
+			return kandidat;
+		}
 	}
 
 }
