@@ -1,5 +1,6 @@
 package com.example.pedagogijadidaktika2;
 
+import poslovnaLogika.DatabaseBroker;
 import poslovnaLogika.Kontroler;
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ public class PregledPitanja extends Activity {
 
 		lista = (ListView) this.findViewById(R.id.listaPitanjaMain);
 		adapter = new AdapterListe(this,
-				Kontroler.vratiObjekat().kolekcijaStatPitanja.getPitanja());
+				new DatabaseBroker(this).vratiSvaPitanja(false));
 		lista.setAdapter(adapter);
 
 		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {

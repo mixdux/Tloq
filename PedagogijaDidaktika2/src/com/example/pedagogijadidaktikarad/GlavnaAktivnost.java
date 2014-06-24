@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 import com.example.lockscreentest.TestService;
 import com.example.pedagogijadidaktika2.PregledPitanja;
@@ -106,10 +107,10 @@ public class GlavnaAktivnost extends Activity {
 		bKaListiPitanja.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (Kontroler.vratiObjekat().getKolekcijaStatPitanja()
-						.BrojPitanja() == 0) {
+				List<PitanjeStat> pist = new DatabaseBroker(getApplicationContext()).vratiSvaPitanja(false);
+				if (pist.size() == 0) {
 					Toast.makeText(getApplicationContext(),
-							"Pitanja nisu učitana, molimo učitajte.",
+							"Ne postoje pitanja u bazi, molimo učitajte.",
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -125,7 +126,7 @@ public class GlavnaAktivnost extends Activity {
 			DatabaseBroker dbb = new DatabaseBroker(this);
 			return new KolekcijaStatPitanja(dbb.vratiSvaPitanja(true));
 		} catch (Exception ex) {
-			throw new Exception("Nesto je poslo po zlu sa ucitavanjem fajla");
+			throw new Exception("Nesto je poslo po zlu sa čitanjem iz baze");
 		}
 	}
 

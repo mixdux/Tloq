@@ -130,4 +130,15 @@ public class DatabaseBroker {
 		}
 		return true;
 	}
+	
+	public boolean updateAktivno(boolean aktivno, String auid){
+		ContentValues args = new ContentValues();
+		if (aktivno){
+			args.put(DatabseCreator.AKTIVNO, 1);
+		} else {
+			args.put(DatabseCreator.AKTIVNO, 0);
+		}
+		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE+"=?", new String[] { auid });
+		return true;
+	}
 }

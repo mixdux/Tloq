@@ -46,6 +46,15 @@ public class KolekcijaStatPitanja {
 		}
 	}
 	
+	public void izbaciStatPitanje(PitanjeStat pist){
+		for (PitanjeStat ps : pitanjaStat){
+			if (ps.getPitanje().getJedinstveniIDikada().equals(pist.getPitanje().getJedinstveniIDikada())){
+				pitanjaStat.remove(ps);
+				break;
+			}
+		}
+	}
+	
 	public int BrojPitanja() {
 		return pitanjaStat.size();
 	}
