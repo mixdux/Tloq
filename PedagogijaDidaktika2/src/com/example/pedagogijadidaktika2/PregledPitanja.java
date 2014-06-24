@@ -20,7 +20,7 @@ public class PregledPitanja extends Activity {
 
 		lista = (ListView) this.findViewById(R.id.listaPitanjaMain);
 		adapter = new AdapterListe(this,
-				Kontroler.vratiObjekat().kolekcijaPitanja.getPitanja());
+				Kontroler.vratiObjekat().kolekcijaStatPitanja.getPitanja());
 		lista.setAdapter(adapter);
 
 		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {

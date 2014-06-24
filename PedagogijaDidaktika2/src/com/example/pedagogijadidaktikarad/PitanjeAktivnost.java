@@ -77,7 +77,7 @@ public class PitanjeAktivnost extends Activity {
 				| Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		novoPitanje.putExtra("pozvanIzGlavne", pozvanIzGlavne);
 		
-		long now = System.currentTimeMillis();
+		int now = (int) System.currentTimeMillis();
 		
 		bOdgovor1.setOnClickListener(new OnClickListener() {
 

@@ -42,7 +42,7 @@ public class DatabaseBroker {
 		values.put(DatabseCreator.NETACNI, pitanje.getBrojNetacnihOdgovora());
 		values.put(DatabseCreator.VREMEODGOVORA, pitanje.getVremeZaOdgovor());
 		
-		database.insert(DatabseCreator.IME_TABELE, null, values);
+		long i = database.insert(DatabseCreator.IME_TABELE, null, values);
 		/*
 		 * int odgovoren = 0; if (pitanje.isOdgovoreno()) odgovoren = 1; String
 		 * SQLQuerry = "INSERT INTO "+ DatabseCreator.IME_TABELE + " (" +
@@ -91,8 +91,7 @@ public class DatabaseBroker {
 				else
 					pitStat.setAktivno(true);
 				pitStat.setVremeZaOdgovor(cursor.getInt(11));
-				// listaPitanja.add(pit);
-
+				listaPitanja.add(pitStat);
 			} while (cursor.moveToNext());
 		}
 		return listaPitanja;

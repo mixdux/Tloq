@@ -31,7 +31,7 @@ public class Pitanje implements Serializable{
 	}
 
 	public String getKreator() {
-		return kreator;
+		return userFriendlyKreator();
 	}
 
 	public void setKreator(String kreator) {
@@ -69,12 +69,14 @@ public class Pitanje implements Serializable{
 		odgovori = new  String[5];
 	}
 	
-	/*public Pitanje(Pitanje pit){
-		kreator = pit.kreator;
-		mTextPitanja = pit.mTextPitanja;
-		odgovoreno = pit.odgovoreno;
-		odgovori = pit.odgovori;
-	}*/
+	private String userFriendlyKreator(){
+		String [] kreatorUF = kreator.split("<dsc>(.+?)</dsc>");
+		String kuf = "";
+		for (String kre : kreatorUF){
+			kuf+=kre;
+		}
+		return kuf;
+	}
 	
 	
 }

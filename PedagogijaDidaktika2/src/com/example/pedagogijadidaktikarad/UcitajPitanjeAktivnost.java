@@ -123,7 +123,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 				String[] odgovori = { tac, odg1, odg2, odg3, odg4 };
 				Log.e("XYZ",mTekstPitanje
 						+ odgovori[0] + odgovori[1]+ odgovori[2]+ odgovori[3]+ odgovori[4]);
-				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, "ADMIN_M");
+				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, "ADMIN<dsc>_M</dsc>");
 				pitanje.setPojasnjenje(razrada);
 
 				

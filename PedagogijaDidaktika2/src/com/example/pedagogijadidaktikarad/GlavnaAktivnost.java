@@ -80,7 +80,7 @@ public class GlavnaAktivnost extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if (Kontroler.vratiObjekat().getKolekcijaPitanja()
+				if (Kontroler.vratiObjekat().getKolekcijaStatPitanja()
 						.BrojPitanja() == 0) {
 					Toast.makeText(getApplicationContext(),
 							"Pitanja nisu učitana, molimo učitajte.",

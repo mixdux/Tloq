@@ -14,13 +14,14 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import domen.Pitanje;
+import domen.PitanjeStat;
 
 public class AdapterListe extends BaseAdapter {
 
 	private Activity activity;
-	private List<Pitanje> listaSvihPitanja;
+	private List<PitanjeStat> listaSvihPitanja;
 	
-	public AdapterListe(Activity a, List<Pitanje> listaPi){
+	public AdapterListe(Activity a, List<PitanjeStat> listaPi){
 		activity = a;
 		listaSvihPitanja = listaPi;
 	}
@@ -57,7 +58,8 @@ public class AdapterListe extends BaseAdapter {
 		}
 		
 		ViewHolder holder = (ViewHolder) vi.getTag();
-		Pitanje pi = listaSvihPitanja.get(position);
+		PitanjeStat pit = listaSvihPitanja.get(position);
+		Pitanje pi = pit.getPitanje();
 		holder.kreator.setText(pi.getKreator());
 		holder.tacanOdgovor.setText(pi.getOdgovori()[Integer.parseInt(pi.getOdgovori()[0])]);
 		holder.tekstPitanja.setText(pi.getmTextPitanja());;
