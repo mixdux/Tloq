@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.opengl.Visibility;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,6 +85,8 @@ public class PitanjeAktivnost extends Activity {
 			
 		}
 		
+		final Vibrator vibrator = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
+		
 		String tacanOdgovor = aktuelnoPitanje.getOdgovori()[Integer.parseInt(aktuelnoPitanje.getOdgovori()[0])];
 		List<String> odgovori = new ArrayList<String>(Arrays.asList(aktuelnoPitanje.getOdgovori()));
 		odgovori.remove(0);
@@ -123,11 +126,13 @@ public class PitanjeAktivnost extends Activity {
 						getApplicationContext().getApplicationContext()
 								.startActivity(novoPitanje);
 					}
+					zavibriraj(true, vibrator);
 					dbb.updateOdgovor(true, auid);
 					statPitanja.get(0).setBrojTacnihOdgovora(
 							statPitanja.get(0).getBrojTacnihOdgovora() + 1);
 					finish();
 				} else {
+					zavibriraj(false, vibrator);
 					if (!pushedAnswers.contains(1)) {
 						dbb.updateOdgovor(false, auid);
 						statPitanja.get(0)
@@ -155,11 +160,13 @@ public class PitanjeAktivnost extends Activity {
 						getApplicationContext().getApplicationContext()
 								.startActivity(novoPitanje);
 					}
+					zavibriraj(true, vibrator);
 					dbb.updateOdgovor(true, auid);
 					statPitanja.get(0).setBrojTacnihOdgovora(
 							statPitanja.get(0).getBrojTacnihOdgovora() + 1);
 					finish();
 				} else {
+					zavibriraj(false, vibrator);
 					if (!pushedAnswers.contains(2)) {
 						dbb.updateOdgovor(false, auid);
 						statPitanja.get(0)
@@ -187,11 +194,13 @@ public class PitanjeAktivnost extends Activity {
 						getApplicationContext().getApplicationContext()
 								.startActivity(novoPitanje);
 					}
+					zavibriraj(true, vibrator);
 					dbb.updateOdgovor(true, auid);
 					statPitanja.get(0).setBrojTacnihOdgovora(
 							statPitanja.get(0).getBrojTacnihOdgovora() + 1);
 					finish();
 				} else {
+					zavibriraj(false, vibrator);
 					if (!pushedAnswers.contains(3)) {
 						dbb.updateOdgovor(false, auid);
 						statPitanja.get(0)
@@ -219,11 +228,13 @@ public class PitanjeAktivnost extends Activity {
 						getApplicationContext().getApplicationContext()
 								.startActivity(novoPitanje);
 					}
+					zavibriraj(true, vibrator);
 					dbb.updateOdgovor(true, auid);
 					statPitanja.get(0).setBrojTacnihOdgovora(
 							statPitanja.get(0).getBrojTacnihOdgovora() + 1);
 					finish();
 				} else {
+					zavibriraj(false, vibrator);
 					if (!pushedAnswers.contains(4)) {
 						dbb.updateOdgovor(false, auid);
 						statPitanja.get(0)
@@ -270,6 +281,14 @@ public class PitanjeAktivnost extends Activity {
 				if ((sansaZaNEDolazenjem - pogodak) <= 0)
 					return kandidat;
 			}
+		}
+	}
+	
+	private void zavibriraj(boolean tacno, Vibrator vibrator){
+		if (tacno){
+			vibrator.vibrate(300);
+		} else {
+			vibrator.vibrate(new long[]{0,100,30,100,30,100}, -1);
 		}
 	}
 

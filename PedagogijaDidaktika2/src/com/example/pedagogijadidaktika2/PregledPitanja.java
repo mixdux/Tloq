@@ -8,6 +8,7 @@ import poslovnaLogika.KolekcijaStatPitanja;
 import poslovnaLogika.Kontroler;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,31 +20,39 @@ public class PregledPitanja extends Activity {
 
 	AdapterListe adapter;
 	ListView lista;
+	
+	boolean longHoldShield = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pregled_pitanja);
-		
-		final List<PitanjeStat> svaPitanjaUBazi = new DatabaseBroker(this).vratiSvaPitanja(false);
-		
+
+		final List<PitanjeStat> svaPitanjaUBazi = new DatabaseBroker(this)
+				.vratiSvaPitanja(false);
+
 		lista = (ListView) this.findViewById(R.id.listaPitanjaMain);
-		adapter = new AdapterListe(this,svaPitanjaUBazi);
+		adapter = new AdapterListe(this, svaPitanjaUBazi);
 		lista.setAdapter(adapter);
+
+		final Vibrator vibrator = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
 		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
-				KolekcijaStatPitanja ksp = Kontroler.vratiObjekat().kolekcijaStatPitanja;
+				if (!longHoldShield) {
+					vibrator.vibrate(50);
+					KolekcijaStatPitanja ksp = Kontroler.vratiObjekat().kolekcijaStatPitanja;
 					CheckBox cb = (CheckBox) v.findViewById(R.id.checkBox);
 					boolean isChecked = cb.isChecked();
 					PitanjeStat pit = svaPitanjaUBazi.get(position);
 					if (isChecked) {
 						cb.setChecked(false);
-						new DatabaseBroker(getApplicationContext()).updateAktivno(false, pit
-								.getPitanje().getJedinstveniIDikada());
+						new DatabaseBroker(getApplicationContext())
+								.updateAktivno(false, pit.getPitanje()
+										.getJedinstveniIDikada());
 						pit.setAktivno(false);
 						Kontroler.vratiObjekat().kolekcijaStatPitanja
 								.izbaciStatPitanje(pit);
@@ -51,14 +60,31 @@ public class PregledPitanja extends Activity {
 
 					} else {
 						cb.setChecked(true);
-						new DatabaseBroker(getApplicationContext()).updateAktivno(true, pit
-								.getPitanje().getJedinstveniIDikada());
+						new DatabaseBroker(getApplicationContext())
+								.updateAktivno(true, pit.getPitanje()
+										.getJedinstveniIDikada());
 						pit.setAktivno(true);
 						Kontroler.vratiObjekat().kolekcijaStatPitanja
 								.DodajPitanje(pit);
 						ksp = Kontroler.vratiObjekat().kolekcijaStatPitanja;
 					}
+				} else {
+					longHoldShield = false;
 				}
+			}
+		});
+
+		lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				vibrator.vibrate(150);
+				longHoldShield = true;
+				// vibrate (long[] pattern, int repeat)
+				return false;
+			}
+
 		});
 
 	}
