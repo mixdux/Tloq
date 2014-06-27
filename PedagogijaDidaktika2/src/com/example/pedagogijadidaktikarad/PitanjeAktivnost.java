@@ -95,6 +95,8 @@ public class PitanjeAktivnost extends Activity {
 		bOdgovor3.setText(odgovori.get(2));
 		bOdgovor4.setText(odgovori.get(3));
 		tacan = odgovori.indexOf(tacanOdgovor)+1;
+		
+		final int vremeUcitavanja = (int) System.currentTimeMillis();
 
 		final String auid = aktuelnoPitanje.getJedinstveniIDikada();
 
@@ -106,8 +108,6 @@ public class PitanjeAktivnost extends Activity {
 
 		final DatabaseBroker dbb = new DatabaseBroker(this);
 
-		int now = (int) System.currentTimeMillis();
-
 		final List<Integer> pushedAnswers = new ArrayList<Integer>();
 
 		bOdgovor1.setOnClickListener(new OnClickListener() {
@@ -115,6 +115,8 @@ public class PitanjeAktivnost extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (tacan == 1) {
+					int vremeOdgovora = (int) System.currentTimeMillis();
+					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
 					Toast.makeText(v.getContext(), "Odgovor je tacan",
 							Toast.LENGTH_SHORT).show();
 					if (pozvanIzGlavne) {
@@ -145,6 +147,8 @@ public class PitanjeAktivnost extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (tacan == 2) {
+					int vremeOdgovora = (int) System.currentTimeMillis();
+					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
 					Toast.makeText(v.getContext(), "Odgovor je tacan",
 							Toast.LENGTH_SHORT).show();
 					if (pozvanIzGlavne) {
@@ -175,6 +179,8 @@ public class PitanjeAktivnost extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (tacan == 3) {
+					int vremeOdgovora = (int) System.currentTimeMillis();
+					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
 					Toast.makeText(v.getContext(), "Odgovor je tacan",
 							Toast.LENGTH_SHORT).show();
 					if (pozvanIzGlavne) {
@@ -205,6 +211,8 @@ public class PitanjeAktivnost extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (tacan == 4) {
+					int vremeOdgovora = (int) System.currentTimeMillis();
+					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
 					Toast.makeText(v.getContext(), "Odgovor je tacan",
 							Toast.LENGTH_SHORT).show();
 					if (pozvanIzGlavne) {

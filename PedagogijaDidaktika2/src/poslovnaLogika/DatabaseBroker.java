@@ -21,7 +21,7 @@ public class DatabaseBroker {
 		dbHelper = new DatabseCreator(context);
 		database = dbHelper.getWritableDatabase();
 	}
-	
+
 	public SQLiteDatabase getDatabase() {
 		return database;
 	}
@@ -112,33 +112,61 @@ public class DatabaseBroker {
 		return listaPitanja;
 	}
 
-	public boolean updateOdgovor(boolean odgovor, String auid){
+	public boolean updateOdgovor(boolean odgovor, String auid) {
 		String odgovorSelekcija = DatabseCreator.NETACNI;
-		if (odgovor){
+		if (odgovor) {
 			odgovorSelekcija = DatabseCreator.TACNI;
 		}
-		String selectQuery = "SELECT " + odgovorSelekcija +" FROM "+ DatabseCreator.IME_TABELE + " WHERE " + DatabseCreator.ALLUNIQUE + "=?";
+		String selectQuery = "SELECT " + odgovorSelekcija + " FROM "
+				+ DatabseCreator.IME_TABELE + " WHERE "
+				+ DatabseCreator.ALLUNIQUE + "=?";
 		Cursor cursor = database.rawQuery(selectQuery, new String[] { auid });
 		if (cursor.moveToFirst()) {
 			int brojOdgovora = cursor.getInt(0);
 			brojOdgovora++;
 			ContentValues args = new ContentValues();
 			args.put(odgovorSelekcija, brojOdgovora);
-			long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE+"=?", new String[] { auid });
+			long i = database.update(DatabseCreator.IME_TABELE, args,
+					DatabseCreator.ALLUNIQUE + "=?", new String[] { auid });
 		} else {
 			return false;
 		}
 		return true;
 	}
-	
-	public boolean updateAktivno(boolean aktivno, String auid){
+
+	public boolean updateAktivno(boolean aktivno, String auid) {
 		ContentValues args = new ContentValues();
-		if (aktivno){
+		if (aktivno) {
 			args.put(DatabseCreator.AKTIVNO, 1);
 		} else {
 			args.put(DatabseCreator.AKTIVNO, 0);
 		}
-		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE+"=?", new String[] { auid });
+		long i = database.update(DatabseCreator.IME_TABELE, args,
+				DatabseCreator.ALLUNIQUE + "=?", new String[] { auid });
 		return true;
+	}
+
+	public boolean updateVremeZaOdgovor(int vreme, String auid) {
+		if (vreme > 10000) {
+			return false;
+		}
+		String selectQuery = "SELECT " + DatabseCreator.VREMEODGOVORA
+				+ " FROM " + DatabseCreator.IME_TABELE + " WHERE "
+				+ DatabseCreator.ALLUNIQUE + "=?";
+		Cursor cursor = database.rawQuery(selectQuery, new String[] { auid });
+		cursor.moveToFirst();
+		int vremeIzBaze = cursor.getInt(0);
+		int prosecnovreme = (vremeIzBaze + vreme) / 2;
+		if (vremeIzBaze == 0) {
+			prosecnovreme = vreme;
+		}
+		ContentValues args = new ContentValues();
+		args.put(DatabseCreator.VREMEODGOVORA, prosecnovreme);
+		long i = database.update(DatabseCreator.IME_TABELE, args,
+				DatabseCreator.ALLUNIQUE + "=?", new String[] { auid });
+		if (i == 1) {
+			return true;
+		}
+		return false;
 	}
 }
