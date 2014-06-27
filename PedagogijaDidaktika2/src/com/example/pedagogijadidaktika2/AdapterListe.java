@@ -76,18 +76,7 @@ public class AdapterListe extends BaseAdapter {
 			holder.selected.setChecked(false);
 		}
 
-		holder.selected.setOnLongClickListener(new View.OnLongClickListener() {
-
-			@Override
-			public boolean onLongClick(View v) {
-				((CompoundButton) v.findViewById(R.id.checkBox))
-						.setChecked(!((CompoundButton) v
-								.findViewById(R.id.checkBox)).isChecked());
-				return true;
-			}
-		});
-
-		holder.selected.setOnTouchListener(new View.OnTouchListener() {
+		/*holder.selected.setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent mevt) {
@@ -118,7 +107,7 @@ public class AdapterListe extends BaseAdapter {
 				}
 				return true;
 			}
-		});
+		});*/
 
 		return vi;
 	}

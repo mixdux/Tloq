@@ -1,6 +1,10 @@
 package com.example.pedagogijadidaktikarad;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -80,12 +84,17 @@ public class PitanjeAktivnost extends Activity {
 			
 		}
 		
+		String tacanOdgovor = aktuelnoPitanje.getOdgovori()[Integer.parseInt(aktuelnoPitanje.getOdgovori()[0])];
+		List<String> odgovori = new ArrayList<String>(Arrays.asList(aktuelnoPitanje.getOdgovori()));
+		odgovori.remove(0);
+		Collections.shuffle(odgovori);
+		 
 		tvPrikazPitanja.setText(aktuelnoPitanje.getmTextPitanja().toString());
-		bOdgovor1.setText(aktuelnoPitanje.getOdgovori()[1]);
-		bOdgovor2.setText(aktuelnoPitanje.getOdgovori()[2]);
-		bOdgovor3.setText(aktuelnoPitanje.getOdgovori()[3]);
-		bOdgovor4.setText(aktuelnoPitanje.getOdgovori()[4]);
-		tacan = Integer.parseInt(aktuelnoPitanje.getOdgovori()[0]);
+		bOdgovor1.setText(odgovori.get(0));
+		bOdgovor2.setText(odgovori.get(1));
+		bOdgovor3.setText(odgovori.get(2));
+		bOdgovor4.setText(odgovori.get(3));
+		tacan = odgovori.indexOf(tacanOdgovor)+1;
 
 		final String auid = aktuelnoPitanje.getJedinstveniIDikada();
 
