@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical" >
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clickable="false" />
+
+    <TextView
+        android:id="@+id/textPitanja"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/checkBox"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/onOfMarker"
+        android:layout_toRightOf="@+id/checkBox"
+        android:text="TekstPitanja" />
+
+    <TextView
+        android:id="@+id/kreator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textPitanja"
+        android:layout_below="@+id/textPitanja"
+        android:layout_marginTop="5dp"
+        android:text="Kreator" />
+
+    <TextView
+        android:id="@+id/tacanOdgovor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/kreator"
+        android:layout_alignRight="@+id/textPitanja"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/kreator"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="Tačan odgovor" />
+
+    <TextView
+        android:id="@+id/drugiOdgovor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textPitanja"
+        android:layout_below="@+id/tacanOdgovor"
+        android:layout_toRightOf="@+id/kreator"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="Drugi odgovor" />
+
+    <TextView
+        android:id="@+id/treciOdgovor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textPitanja"
+        android:layout_below="@+id/drugiOdgovor"
+        android:layout_toRightOf="@+id/kreator"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="Tačan odgovor" />
+
+    <TextView
+        android:id="@+id/cetvrtiOdgovor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textPitanja"
+        android:layout_below="@+id/treciOdgovor"
+        android:layout_toRightOf="@+id/kreator"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="Tačan odgovor" />
+
+    <Button
+        android:id="@+id/onOfMarker"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/cetvrtiOdgovor"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/checkBox"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:clickable="false" />
+
+    <TextView
+        android:id="@+id/txtStatistika"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textPitanja"
+        android:layout_below="@+id/cetvrtiOdgovor"
+        android:layout_marginTop="5dp"
+        android:text="Stat:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtTacniOdgovori"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtStatistika"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/txtStatistika"
+        android:text="T:"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/txtBrojTacnihOdgovora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtTacniOdgovori"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/txtTacniOdgovori"
+        android:text="BR" />
+
+    <TextView
+        android:id="@+id/txtNetacniOdgovori"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtTacniOdgovori"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/txtBrojTacnihOdgovora"
+        android:text="NT:"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/txtBrojNetacnihOdgovora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtTacniOdgovori"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/txtNetacniOdgovori"
+        android:text="BR" />
+
+    <TextView
+        android:id="@+id/txtPotrebnoVreme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtTacniOdgovori"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/txtBrojNetacnihOdgovora"
+        android:text="VR:"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/txtPotrebneSekunde"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtTacniOdgovori"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/txtPotrebnoVreme"
+        android:text="4.0" />
+
+    <TextView
+        android:id="@+id/txtSekunde"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtTacniOdgovori"
+        android:layout_toRightOf="@+id/txtPotrebneSekunde"
+        android:text="s" />
+
+    <TextView
+        android:id="@+id/txtRejting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtTacniOdgovori"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/txtSekunde"
+        android:text="R:"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/txtRejtingZvezdice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txtTacniOdgovori"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/txtRejting"
+        android:text="3" />
+
+</RelativeLayout>

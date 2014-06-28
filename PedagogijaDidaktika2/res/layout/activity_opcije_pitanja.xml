@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.pedagogijadidaktika2.PregledPitanja$PlaceholderFragment" >
+
+    <ListView
+        android:id="@+id/listaPitanjaOpcije"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/btnObrisi"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentTop="true" >
+    </ListView>
+
+    <Button
+        android:id="@+id/btnObrisi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@+id/listaPitanjaOpcije"
+        android:text="Obriši" />
+
+    <Button
+        android:id="@+id/btnResetujStatistiku"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnObrisi"
+        android:layout_alignRight="@+id/listaPitanjaOpcije"
+        android:text="Reset" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/btnObrisi"
+        android:layout_alignTop="@+id/btnObrisi"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/btnResetujStatistiku"
+        android:layout_toRightOf="@+id/btnObrisi"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:text="Za menjanje samog pitanja, zadrži dugo." />
+
+</RelativeLayout>

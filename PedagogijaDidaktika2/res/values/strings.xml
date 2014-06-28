@@ -9,5 +9,6 @@
     <string name="title_activity_pregled_pitanja">PregledPitanja</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_opcije_pitanja">OpcijePitanja</string>
 
 </resources>

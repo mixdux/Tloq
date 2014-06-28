@@ -286,9 +286,9 @@ public class PitanjeAktivnost extends Activity {
 	
 	private void zavibriraj(boolean tacno, Vibrator vibrator){
 		if (tacno){
-			vibrator.vibrate(300);
+			vibrator.vibrate(400);
 		} else {
-			vibrator.vibrate(new long[]{0,100,30,100,30,100}, -1);
+			vibrator.vibrate(new long[]{0,100,50,100,50,100}, -1);
 		}
 	}
 

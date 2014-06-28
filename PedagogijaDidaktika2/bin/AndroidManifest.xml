@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -51,7 +52,7 @@
         <activity
             android:name="com.example.pedagogijadidaktikarad.GlavnaAktivnost"
             android:label="@string/app_name" >
-"
+"
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,6 +66,10 @@
         <activity
             android:name="com.example.pedagogijadidaktika2.PregledPitanja"
             android:label="@string/title_activity_pregled_pitanja" >
+        </activity>
+        <activity
+            android:name="com.example.pedagogijadidaktika2.OpcijePitanja"
+            android:label="@string/title_activity_opcije_pitanja" >
         </activity>
     </application>
 
