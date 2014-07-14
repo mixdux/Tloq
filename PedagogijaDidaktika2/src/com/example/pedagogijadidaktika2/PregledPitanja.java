@@ -52,31 +52,33 @@ public class PregledPitanja extends Activity {
 		final Vibrator vibrator = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
 		Button opcije = (Button) findViewById(R.id.btnOpcije);
-		
+
 		opcije.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent opcijePitanja = new Intent(getApplicationContext(), OpcijePitanja.class);
-				opcijePitanja.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-	        	getApplicationContext().startActivity(opcijePitanja);	
+				Intent opcijePitanja = new Intent(getApplicationContext(),
+						OpcijePitanja.class);
+				opcijePitanja.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+				getApplicationContext().startActivity(opcijePitanja);
 			}
 		});
-		
+
 		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-			
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 				Button b = (Button) v.findViewById(R.id.onOfMarker);
 				if (!longHoldShield) {
 					vibrator.vibrate(50);
-					ColorDrawable buttonColor = (ColorDrawable) b.getBackground();
+					ColorDrawable buttonColor = (ColorDrawable) b
+							.getBackground();
 					int color = buttonColor.getColor();
 					PitanjeStat pit = svaPitanjaUBazi.get(position);
-					if (color==Color.BLUE) {
+					if (color == Color.BLUE) {
 						b.setBackgroundColor(Color.RED);
 						new DatabaseBroker(getApplicationContext())
 								.updateAktivno(false, pit.getPitanje()
@@ -105,7 +107,7 @@ public class PregledPitanja extends Activity {
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				vibrator.vibrate(150);
-				//showDialog();
+				// showDialog();
 				longHoldShield = true;
 				return false;
 			}
@@ -118,32 +120,48 @@ public class PregledPitanja extends Activity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Šta želite da uradite odabranom pitanju?")
 				.setCancelable(false)
-				.setNeutralButton("Izmenim", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Promeni", Toast.LENGTH_SHORT).show();
-					}
-				});
+				.setNeutralButton("Izmenim",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								Toast.makeText(getApplicationContext(),
+										"Promeni", Toast.LENGTH_SHORT).show();
+							}
+						});
 		AlertDialog alert = builder.create();
-		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL, "Resetujem statistiku", new DialogInterface.OnClickListener() {
+		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL,
+				"Resetujem statistiku", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Resetuj", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "Resetuj",
+								Toast.LENGTH_SHORT).show();
 					}
 				});
-		
-		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL, "Obrišem ga", new DialogInterface.OnClickListener() {
+
+		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL,
+				"Obrišem ga", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Obriši", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "Obriši",
+								Toast.LENGTH_SHORT).show();
 					}
 				});
-		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL, "Vrati se", new DialogInterface.OnClickListener() {
+		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL,
+				"Vrati se", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Nazad", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "Nazad",
+								Toast.LENGTH_SHORT).show();
 						dialog.cancel();
 					}
 				});
 
 		alert.show();
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		adapter = new AdapterListe(this,
+				new DatabaseBroker(this).vratiSvaPitanja(false), false);
+		lista.setAdapter(adapter);
 	}
 
 }

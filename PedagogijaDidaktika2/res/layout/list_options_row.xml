@@ -28,8 +28,8 @@
         android:id="@+id/kreator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textPitanja"
-        android:layout_below="@+id/textPitanja"
+        android:layout_alignRight="@+id/textPitanja"
+        android:layout_below="@+id/txtStatistika"
         android:layout_marginTop="5dp"
         android:text="Kreator" />
 
@@ -37,12 +37,11 @@
         android:id="@+id/tacanOdgovor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/kreator"
         android:layout_alignRight="@+id/textPitanja"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/kreator"
-        android:gravity="right"
-        android:singleLine="true"
+		android:layout_alignLeft="@+id/textPitanja"
+        android:layout_below="@+id/textPitanja"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold" 
         android:text="Tačan odgovor" />
 
     <TextView
@@ -50,10 +49,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/textPitanja"
+        android:layout_alignLeft="@+id/tacanOdgovor"
         android:layout_below="@+id/tacanOdgovor"
         android:layout_toRightOf="@+id/kreator"
-        android:gravity="right"
-        android:singleLine="true"
         android:text="Drugi odgovor" />
 
     <TextView
@@ -61,10 +59,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/textPitanja"
+        android:layout_alignLeft="@+id/tacanOdgovor"
         android:layout_below="@+id/drugiOdgovor"
         android:layout_toRightOf="@+id/kreator"
-        android:gravity="right"
-        android:singleLine="true"
         android:text="Tačan odgovor" />
 
     <TextView
@@ -72,10 +69,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/textPitanja"
+        android:layout_alignLeft="@+id/tacanOdgovor"
         android:layout_below="@+id/treciOdgovor"
         android:layout_toRightOf="@+id/kreator"
-        android:gravity="right"
-        android:singleLine="true"
         android:text="Tačan odgovor" />
 
     <Button

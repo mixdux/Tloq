@@ -33,7 +33,11 @@
         android:layout_alignBaseline="@+id/kreator"
         android:layout_alignRight="@+id/textPitanja"
         android:layout_marginTop="5dp"
-        android:text="Tačan odgovor" />
+        android:layout_toRightOf="@+id/kreator"
+        android:layout_marginLeft="20dp"
+        android:gravity="right"
+        android:text="Tačan odgovor"
+        android:textAlignment="gravity" />
 
     <Button
         android:id="@+id/onOfMarker"

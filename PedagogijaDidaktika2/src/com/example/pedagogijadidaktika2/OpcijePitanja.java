@@ -33,6 +33,8 @@ public class OpcijePitanja extends Activity {
 
 	AdapterListe adapter;
 	ListView lista;
+	final List<PitanjeStat> selektovanaPitanja = new ArrayList<PitanjeStat>();
+	Activity act = this;
 
 	boolean longHoldShield = false;
 
@@ -43,12 +45,12 @@ public class OpcijePitanja extends Activity {
 
 		final List<PitanjeStat> svaPitanjaUBazi = new DatabaseBroker(this)
 				.vratiSvaPitanja(false);
-
+		Button obrisi = (Button) findViewById(R.id.btnObrisi);
+		Button resetuj = (Button) findViewById(R.id.btnResetujStatistiku);
 		lista = (ListView) this.findViewById(R.id.listaPitanjaOpcije);
 		adapter = new AdapterListe(this, svaPitanjaUBazi, true);
 		lista.setAdapter(adapter);
 		final Vibrator vibrator = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
-		final List<PitanjeStat> selektovanaPitanja = new ArrayList<PitanjeStat>();
 
 		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -81,16 +83,40 @@ public class OpcijePitanja extends Activity {
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				vibrator.vibrate(150);
-				showDialog();
+				prikaziPromeniDijalog();
 				longHoldShield = true;
 				return false;
 			}
 
 		});
+		
+		obrisi.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (selektovanaPitanja.size()==0){
+					Toast.makeText(getApplicationContext(), "Molim odaberite bar jedno pitanje", Toast.LENGTH_SHORT).show();
+				} else {
+					prikaziObrisiDijalog();
+				}
+			}
+		});
+		
+		resetuj.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (selektovanaPitanja.size()==0){
+					Toast.makeText(getApplicationContext(), "Molim odaberite bar jedno pitanje", Toast.LENGTH_SHORT).show();
+				} else {
+					prikaziResetujDijalog();
+				}
+			}
+		});
 
 	}
 
-	private void showDialog() {
+	private void prikaziPromeniDijalog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Da li želite da izmenite pitanje?")
 				.setCancelable(false)
@@ -107,7 +133,67 @@ public class OpcijePitanja extends Activity {
 				});		
 
 		alert.show();
+	}
+	
+	private void prikaziResetujDijalog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		String poruka = "Da li ste sigurni da želite resetovati statistiku odabranih pitanja?";
+		if (selektovanaPitanja.size()==1){
+			poruka = "Da li ste sigurni da želite resetovati statistiku odabranog pitanja?";
+		}
+		builder.setMessage(poruka)
+				.setCancelable(false)
+				.setPositiveButton("Da", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						Toast.makeText(getApplicationContext(), "Resetuj", Toast.LENGTH_SHORT).show();
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.setButton(android.content.DialogInterface.BUTTON_NEGATIVE, "Ne", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						Toast.makeText(getApplicationContext(), "Ne resetuj", Toast.LENGTH_SHORT).show();
+					}
+				});		
 
+		alert.show();
+	}
+	
+	private void prikaziObrisiDijalog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		String poruka = "Da li ste sigurni da želite potpuno obrisati odabrana pitanja?";
+		final boolean visePitanja;
+		if (selektovanaPitanja.size()==1){
+			poruka = "Da li ste sigurni da želite potpuno obrisati odabrano pitanje?";
+			visePitanja=false;
+		} else {
+			visePitanja = true;
+		}
+		builder.setMessage(poruka)
+				.setCancelable(false)
+				.setPositiveButton("Da", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
+						for (PitanjeStat pitanje : selektovanaPitanja){
+							dbb.obrisiPitanje(pitanje.getPitanje().getJedinstveniIDikada());
+							selektovanaPitanja.remove(pitanje);
+						}
+						adapter = new AdapterListe(act, dbb.vratiSvaPitanja(false), true);
+						lista.setAdapter(adapter);
+						if (visePitanja){
+							Toast.makeText(getApplicationContext(), "Pitanja su uspešno obrisana!", Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(getApplicationContext(), "Pitanje je uspešno obrisano!", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.setButton(android.content.DialogInterface.BUTTON_NEGATIVE, "Ne", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						Toast.makeText(getApplicationContext(), "Ne briši", Toast.LENGTH_SHORT).show();
+					}
+				});		
+
+		alert.show();
 	}
 
 

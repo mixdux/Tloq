@@ -55,22 +55,7 @@ public class DatabaseBroker {
 		values.put(DatabseCreator.VREMEODGOVORA, pitanje.getVremeZaOdgovor());
 
 		long i = database.insert(DatabseCreator.IME_TABELE, null, values);
-		/*
-		 * int odgovoren = 0; if (pitanje.isOdgovoreno()) odgovoren = 1; String
-		 * SQLQuerry = "INSERT INTO "+ DatabseCreator.IME_TABELE + " (" +
-		 * DatabseCreator.TEXT_PITANJA + "," + DatabseCreator.TACAN_ODGOVOR +
-		 * "," + DatabseCreator.PRVI_ODGOVOR + "," +
-		 * DatabseCreator.DRUGI_ODGOVOR + "," + DatabseCreator.TRECI_ODGOVOR +
-		 * "," + DatabseCreator.CETVRTI_ODGOVOR + "," +
-		 * DatabseCreator.ODGOVORENO +") " + " VALUES" + " ('" +
-		 * pitanje.getmTextPitanja() + "','" + pitanje.getOdgovori()[0] + "','"
-		 * + pitanje.getOdgovori()[1] + "','" + pitanje.getOdgovori()[2]+ "','"
-		 * + pitanje.getOdgovori()[3] + "','" + pitanje.getOdgovori()[4] + "',"
-		 * + odgovoren +");"; database.insert(DatabseCreator.IME_TABELE, null,
-		 * values)
-		 */
-		// database.execSQL(SQLQuerry);
-		database.close(); // Closing database connection
+		database.close();
 	}
 
 	public List<PitanjeStat> vratiSvaPitanja(boolean samoAktivna) {
@@ -169,4 +154,10 @@ public class DatabaseBroker {
 		}
 		return false;
 	}
+	
+	public boolean obrisiPitanje(String auid) {
+		long i = database.delete(DatabseCreator.IME_TABELE,DatabseCreator.ALLUNIQUE + "=?", new String[] { auid });
+		return true;
+	}
+	
 }
