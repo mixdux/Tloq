@@ -84,7 +84,7 @@ public class PregledPitanja extends Activity {
 								.updateAktivno(false, pit.getPitanje()
 										.getJedinstveniIDikada());
 						pit.setAktivno(false);
-						Kontroler.vratiObjekat().kolekcijaStatPitanja
+						Kontroler.vratiObjekat().getKolekcijaStatPitanja()
 								.izbaciStatPitanje(pit);
 					} else {
 						b.setBackgroundColor(Color.BLUE);
@@ -92,7 +92,7 @@ public class PregledPitanja extends Activity {
 								.updateAktivno(true, pit.getPitanje()
 										.getJedinstveniIDikada());
 						pit.setAktivno(true);
-						Kontroler.vratiObjekat().kolekcijaStatPitanja
+						Kontroler.vratiObjekat().getKolekcijaStatPitanja()
 								.DodajPitanje(pit);
 					}
 				} else {
@@ -101,7 +101,7 @@ public class PregledPitanja extends Activity {
 			}
 		});
 
-		lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		/*lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			// http://stackoverflow.com/questions/12244297/how-to-add-multiple-buttons-on-a-single-alertdialog
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
@@ -112,47 +112,7 @@ public class PregledPitanja extends Activity {
 				return false;
 			}
 
-		});
-
-	}
-
-	private void showDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Šta želite da uradite odabranom pitanju?")
-				.setCancelable(false)
-				.setNeutralButton("Izmenim",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								Toast.makeText(getApplicationContext(),
-										"Promeni", Toast.LENGTH_SHORT).show();
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL,
-				"Resetujem statistiku", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Resetuj",
-								Toast.LENGTH_SHORT).show();
-					}
-				});
-
-		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL,
-				"Obrišem ga", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Obriši",
-								Toast.LENGTH_SHORT).show();
-					}
-				});
-		alert.setButton(android.content.DialogInterface.BUTTON_NEUTRAL,
-				"Vrati se", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Nazad",
-								Toast.LENGTH_SHORT).show();
-						dialog.cancel();
-					}
-				});
-
-		alert.show();
+		});*/
 
 	}
 

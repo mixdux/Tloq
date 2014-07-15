@@ -3,6 +3,8 @@ package com.example.pedagogijadidaktika2;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.pedagogijadidaktikarad.UcitajPitanjeAktivnost;
+
 import poslovnaLogika.DatabaseBroker;
 import poslovnaLogika.Kontroler;
 import domen.PitanjeStat;
@@ -13,6 +15,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -34,6 +37,7 @@ public class OpcijePitanja extends Activity {
 	AdapterListe adapter;
 	ListView lista;
 	final List<PitanjeStat> selektovanaPitanja = new ArrayList<PitanjeStat>();
+	final List<PitanjeStat> svaPitanjaUBazi = new ArrayList<PitanjeStat>();
 	Activity act = this;
 
 	boolean longHoldShield = false;
@@ -42,9 +46,7 @@ public class OpcijePitanja extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_opcije_pitanja);
-
-		final List<PitanjeStat> svaPitanjaUBazi = new DatabaseBroker(this)
-				.vratiSvaPitanja(false);
+		svaPitanjaUBazi.addAll((new DatabaseBroker(this)).vratiSvaPitanja(false));
 		Button obrisi = (Button) findViewById(R.id.btnObrisi);
 		Button resetuj = (Button) findViewById(R.id.btnResetujStatistiku);
 		lista = (ListView) this.findViewById(R.id.listaPitanjaOpcije);
@@ -81,9 +83,9 @@ public class OpcijePitanja extends Activity {
 			// http://stackoverflow.com/questions/12244297/how-to-add-multiple-buttons-on-a-single-alertdialog
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+					int position, long arg3) {
 				vibrator.vibrate(150);
-				prikaziPromeniDijalog();
+				prikaziPromeniDijalog(svaPitanjaUBazi.get(position));
 				longHoldShield = true;
 				return false;
 			}
@@ -116,13 +118,17 @@ public class OpcijePitanja extends Activity {
 
 	}
 
-	private void prikaziPromeniDijalog() {
+	private void prikaziPromeniDijalog(PitanjeStat pitanje) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final PitanjeStat pit = pitanje;
 		builder.setMessage("Da li želite da izmenite pitanje?")
 				.setCancelable(false)
 				.setPositiveButton("Da", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Promeni", Toast.LENGTH_SHORT).show();
+						Intent ucitajPitanje = new Intent(getApplicationContext(),UcitajPitanjeAktivnost.class);
+						ucitajPitanje.putExtra("promeni", true);
+						ucitajPitanje.putExtra("pitanje", pit);
+						startActivityForResult(ucitajPitanje, 2);
 					}
 				});
 		AlertDialog alert = builder.create();
@@ -145,7 +151,12 @@ public class OpcijePitanja extends Activity {
 				.setCancelable(false)
 				.setPositiveButton("Da", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Resetuj", Toast.LENGTH_SHORT).show();
+						DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());					
+						for (PitanjeStat pitanje : selektovanaPitanja){
+							dbb.resetujStatistiku(pitanje.getPitanje().getJedinstveniIDikada());
+						}
+						adapter = new AdapterListe(act, dbb.vratiSvaPitanja(false), true);
+						lista.setAdapter(adapter);
 					}
 				});
 		AlertDialog alert = builder.create();
@@ -196,5 +207,13 @@ public class OpcijePitanja extends Activity {
 		alert.show();
 	}
 
+	protected void onResume() {
+		super.onResume();
+		svaPitanjaUBazi.clear();
+		svaPitanjaUBazi.addAll((new DatabaseBroker(this)).vratiSvaPitanja(false));
+		adapter = new AdapterListe(this,svaPitanjaUBazi, true);
+		lista.setAdapter(adapter);
+	}
+	
 
 }

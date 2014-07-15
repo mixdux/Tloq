@@ -13,6 +13,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseBroker {
+	
 	private SQLiteDatabase database;
 	private DatabseCreator dbHelper;
 	private String column = DatabseCreator.COLUMN_ID;
@@ -157,6 +158,29 @@ public class DatabaseBroker {
 	
 	public boolean obrisiPitanje(String auid) {
 		long i = database.delete(DatabseCreator.IME_TABELE,DatabseCreator.ALLUNIQUE + "=?", new String[] { auid });
+		return true;
+	}
+	
+	public boolean resetujStatistiku(String auid){
+		ContentValues args = new ContentValues();
+		args.put(DatabseCreator.TACNI, 0);
+		args.put(DatabseCreator.NETACNI, 0);
+		args.put(DatabseCreator.VREMEODGOVORA, 0);
+		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { auid });
+		return true;
+	}
+	
+	public boolean promeniPitanje(PitanjeStat pit){
+		ContentValues args = new ContentValues();
+		args.put(DatabseCreator.TEXT_PITANJA, pit.getPitanje().getmTextPitanja());
+		args.put(DatabseCreator.PRVI_ODGOVOR,  pit.getPitanje().getOdgovori()[1]);
+		args.put(DatabseCreator.DRUGI_ODGOVOR, pit.getPitanje().getOdgovori()[2]);
+		args.put(DatabseCreator.TRECI_ODGOVOR, pit.getPitanje().getOdgovori()[3]);
+		args.put(DatabseCreator.CETVRTI_ODGOVOR, pit.getPitanje().getOdgovori()[4]);
+		args.put(DatabseCreator.TACAN_ODGOVOR, pit.getPitanje().getOdgovori()[0]);
+		args.put(DatabseCreator.POJASNJENJE, pit.getPitanje().getPojasnjenje());
+		args.put(DatabseCreator.KREATOR, pit.getPitanje().getKreator());
+		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { pit.getPitanje().getJedinstveniIDikada() });
 		return true;
 	}
 	

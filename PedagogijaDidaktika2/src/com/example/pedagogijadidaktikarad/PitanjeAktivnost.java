@@ -253,7 +253,6 @@ public class PitanjeAktivnost extends Activity {
 			bpovratak.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					setResult(Activity.RESULT_OK);
 					dbb.getDatabase().close();
 					finish();
 				}

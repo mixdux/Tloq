@@ -1,12 +1,15 @@
 package com.example.pedagogijadidaktikarad;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import com.example.pedagogijadidaktika2.R;
 
 import poslovnaLogika.DatabaseBroker;
+import poslovnaLogika.Kontroler;
 import domen.Pitanje;
 import domen.PitanjeStat;
 import android.app.Activity;
@@ -43,6 +46,16 @@ public class UcitajPitanjeAktivnost extends Activity {
 		final EditText tvOdg3 = (EditText) findViewById(R.id.etOdgovor3);
 		final EditText tvOdg4 = (EditText) findViewById(R.id.etOdgovor4);
 		final EditText tvRazrada = (EditText) findViewById(R.id.etRazrada);
+
+		final boolean promeniPitanje = this.getIntent().getExtras()
+				.getBoolean(("promeni"));
+		final List<PitanjeStat> pitanjeKontejner = new ArrayList<PitanjeStat>();
+		if (promeniPitanje) {
+			PitanjeStat pitanjePromena = (PitanjeStat) this.getIntent()
+					.getExtras().getSerializable("pitanje");
+			pitanjeKontejner.add(pitanjePromena);
+			popuniPromeni(pitanjePromena);
+		}
 
 		rootView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -104,7 +117,21 @@ public class UcitajPitanjeAktivnost extends Activity {
 							Toast.LENGTH_LONG).show();
 
 				} else {
-					SacuvajPitanje();
+					if (promeniPitanje) {
+						PitanjeStat pist = proveriPromene(pitanjeKontejner.get(0));
+						if(pist!=null){
+						if ((new DatabaseBroker(getApplicationContext())).promeniPitanje(pist));
+						Toast.makeText(getApplicationContext(), "Pitanje je uspešno promenjeno!",
+								Toast.LENGTH_SHORT).show();
+						finish();
+						}
+						else {
+							Toast.makeText(getApplicationContext(), "Sve je isto!",
+									Toast.LENGTH_SHORT).show();
+						}
+					} else {
+						SacuvajPitanje();
+					}
 				}
 
 			}
@@ -114,7 +141,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 				String[] odgovori = { tac, odg1, odg2, odg3, odg4 };
 				Log.e("XYZ", mTekstPitanje + odgovori[0] + odgovori[1]
 						+ odgovori[2] + odgovori[3] + odgovori[4]);
-				String kreator = "ADMIN<dsc>_M</dsc>";
+				String kreator = Kontroler.vratiObjekat().getAktivniKorisnik();
 				String auid = napraviAUID();
 				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, kreator,
 						auid);
@@ -153,6 +180,59 @@ public class UcitajPitanjeAktivnost extends Activity {
 			}
 		});
 
+	}
+
+	private void popuniPromeni(PitanjeStat pitanjePromena) {
+		((EditText) findViewById(R.id.etTekstPitanja)).setText(pitanjePromena
+				.getPitanje().getmTextPitanja());
+		((EditText) findViewById(R.id.etOdgovor1)).setText(pitanjePromena
+				.getPitanje().getOdgovori()[1]);
+		((EditText) findViewById(R.id.etOdgovor2)).setText(pitanjePromena
+				.getPitanje().getOdgovori()[2]);
+		((EditText) findViewById(R.id.etOdgovor3)).setText(pitanjePromena
+				.getPitanje().getOdgovori()[3]);
+		((EditText) findViewById(R.id.etOdgovor4)).setText(pitanjePromena
+				.getPitanje().getOdgovori()[4]);
+		((EditText) findViewById(R.id.etRazrada)).setText(pitanjePromena
+				.getPitanje().getPojasnjenje());
+		switch (Integer.parseInt(pitanjePromena.getPitanje().getOdgovori()[0])) {
+		case 1:
+			((RadioButton) findViewById(R.id.radioButton1)).setChecked(true);
+			break;
+		case 2:
+			((RadioButton) findViewById(R.id.radioButton2)).setChecked(true);
+			break;
+		case 3:
+			((RadioButton) findViewById(R.id.RadioButton3)).setChecked(true);
+			break;
+		case 4:
+			((RadioButton) findViewById(R.id.RadioButton4)).setChecked(true);
+			break;
+		}
+	}
+
+	private PitanjeStat proveriPromene(PitanjeStat pitanjeStaro) {
+		int idSelektovanog = ((RadioGroup) findViewById(R.id.rgTacanOdgovor)).getCheckedRadioButtonId();
+		RadioButton selektovanoDugme = (RadioButton) findViewById(idSelektovanog);
+		String selText = selektovanoDugme.getText().toString();
+		if (((EditText) findViewById(R.id.etTekstPitanja)).getText().toString().equals(pitanjeStaro.getPitanje().getmTextPitanja())
+				&& ((EditText) findViewById(R.id.etOdgovor1)).getText().toString().equals(pitanjeStaro.getPitanje().getOdgovori()[1])
+				&& ((EditText) findViewById(R.id.etOdgovor2)).getText().toString().equals(pitanjeStaro.getPitanje().getOdgovori()[2])
+				&& ((EditText) findViewById(R.id.etOdgovor3)).getText().toString().equals(pitanjeStaro.getPitanje().getOdgovori()[3])
+				&& ((EditText) findViewById(R.id.etOdgovor4)).getText().toString().equals(pitanjeStaro.getPitanje().getOdgovori()[4])
+				&& ((EditText) findViewById(R.id.etRazrada)).getText().toString().equals(pitanjeStaro.getPitanje().getPojasnjenje())){
+				if (selText.equals(pitanjeStaro.getPitanje().getOdgovori()[0])){
+					return null;
+				}
+		}
+		String[] odg = new String[]{selText,
+				((EditText) findViewById(R.id.etOdgovor1)).getText().toString(),
+				((EditText) findViewById(R.id.etOdgovor2)).getText().toString(),
+				((EditText) findViewById(R.id.etOdgovor3)).getText().toString(),
+				((EditText) findViewById(R.id.etOdgovor4)).getText().toString()};
+		String aktivniKorisnik = Kontroler.vratiObjekat().getAktivniKorisnik();
+		PitanjeStat pitStat = new PitanjeStat(new Pitanje(((EditText) findViewById(R.id.etTekstPitanja)).getText().toString(), odg, aktivniKorisnik, pitanjeStaro.getPitanje().getJedinstveniIDikada()));
+		return pitStat;
 	}
 
 	private String napraviAUID() {

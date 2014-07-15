@@ -13,10 +13,11 @@ public class Kontroler {
 
 	public static Kontroler kontroler;
 
-	public KolekcijaPitanja kolekcijaPitanja;
-	public KolekcijaStatPitanja kolekcijaStatPitanja;
-
-	public Kontroler() {
+	private KolekcijaPitanja kolekcijaPitanja;
+	private KolekcijaStatPitanja kolekcijaStatPitanja;
+	private String aktivniKorisnik;
+	
+	private Kontroler() {
 		kolekcijaPitanja = new KolekcijaPitanja();
 		kolekcijaStatPitanja = new KolekcijaStatPitanja();
 	}
@@ -50,6 +51,14 @@ public class Kontroler {
 	
 	public void dodajStatPitanje(PitanjeStat p) {
 		kolekcijaStatPitanja.DodajPitanje(p);
+	}
+	
+	public String getAktivniKorisnik() {
+		return aktivniKorisnik;
+	}
+
+	public void setAktivniKorisnik(String aktivniKorisnik) {
+		this.aktivniKorisnik = aktivniKorisnik;
 	}
 
 	public Pitanje vratiPitanje() throws RuntimeException {

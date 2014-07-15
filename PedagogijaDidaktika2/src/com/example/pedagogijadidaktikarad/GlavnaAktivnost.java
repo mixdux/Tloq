@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 
 import com.example.lockscreentest.TestService;
+import com.example.pedagogijadidaktika2.AdapterListe;
 import com.example.pedagogijadidaktika2.PregledPitanja;
 import com.example.pedagogijadidaktika2.R;
 
@@ -38,12 +39,13 @@ public class GlavnaAktivnost extends Activity {
 	public Button bKaListiPitanja;
 	public static final String FILENAME = "SaveFileForMyApp.bin";
 	private KolekcijaStatPitanja ksp;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_glavna_aktivnost);
-
+		Kontroler.vratiObjekat().setAktivniKorisnik("ADMIN<dsc>_M</dsc>");
+		
 		startService(new Intent(this, TestService.class));
 		Toast.makeText(this, "Pozvan servis", Toast.LENGTH_SHORT).show();
 
@@ -74,6 +76,7 @@ public class GlavnaAktivnost extends Activity {
 			public void onClick(View v) {
 				Intent ucitajPitanje = new Intent(v.getContext(),
 						UcitajPitanjeAktivnost.class);
+				ucitajPitanje.putExtra("promeni", false);
 				startActivityForResult(ucitajPitanje, 1);
 
 			}
@@ -116,7 +119,7 @@ public class GlavnaAktivnost extends Activity {
 				}
 				Intent listaPitanja = new Intent(v.getContext(),
 						PregledPitanja.class);
-				startActivityForResult(listaPitanja, 1);
+				startActivityForResult(listaPitanja, 3);
 			}
 		});
 	}
@@ -132,7 +135,8 @@ public class GlavnaAktivnost extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 1) {
+		switch (requestCode){
+		case 1:
 			if (resultCode == RESULT_OK) {
 				PitanjeStat pitanje = (PitanjeStat) data.getSerializableExtra("myobj");
 				Kontroler.vratiObjekat().dodajStatPitanje(pitanje);
@@ -140,10 +144,17 @@ public class GlavnaAktivnost extends Activity {
 			if (resultCode == RESULT_CANCELED) {
 				// Write your code if there's no result
 			}
-		}
-		if (requestCode == 2) {
+		break;
+
+		case 2:
 			Toast.makeText(this, "Sesija odgovaranja uspešno završena",
 					Toast.LENGTH_SHORT).show();
+		break;
+		
+		case 3:
+			Kontroler.vratiObjekat().UcitajStatPitanja(new KolekcijaStatPitanja(new DatabaseBroker(getApplicationContext()).vratiSvaPitanja(true)));
+		break;
 		}
 	}
+	
 }
