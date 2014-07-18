@@ -28,6 +28,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +57,8 @@ public class PitanjeAktivnost extends Activity {
 		bpovratak = (Button) findViewById(R.id.jbPovratak);
 		Log.i(Konstante.TAG, "Povezao se sa formom");
 
+		podesiVisinu();
+		
 		List<PitanjeStat> pitanja = Kontroler.vratiObjekat()
 				.getKolekcijaStatPitanja().getPitanja();
 
@@ -62,7 +67,7 @@ public class PitanjeAktivnost extends Activity {
 			pitanja = dbb.vratiSvaPitanja(true);
 		}
 
-		final List<PitanjeStat> statPitanja = new ArrayList<>();
+		final List<PitanjeStat> statPitanja = new ArrayList<PitanjeStat>();
 		Pitanje aktuelnoPitanje = null;
 		switch (pitanja.size()) {
 		case 0:
@@ -99,6 +104,8 @@ public class PitanjeAktivnost extends Activity {
 		bOdgovor4.setText(odgovori.get(3));
 		tacan = odgovori.indexOf(tacanOdgovor)+1;
 		
+		podesiVisinu();
+		
 		final int vremeUcitavanja = (int) System.currentTimeMillis();
 
 		final String auid = aktuelnoPitanje.getJedinstveniIDikada();
@@ -117,6 +124,7 @@ public class PitanjeAktivnost extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				int vel = bOdgovor1.getHeight();
 				if (tacan == 1) {
 					int vremeOdgovora = (int) System.currentTimeMillis();
 					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
@@ -219,6 +227,7 @@ public class PitanjeAktivnost extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				int vel = bOdgovor1.getHeight();
 				if (tacan == 4) {
 					int vremeOdgovora = (int) System.currentTimeMillis();
 					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
@@ -262,6 +271,7 @@ public class PitanjeAktivnost extends Activity {
 		}
 
 	}
+	 
 
 	private PitanjeStat dajRandomPitanje(List<PitanjeStat> pitanja) {
 		while (true) {
@@ -288,6 +298,21 @@ public class PitanjeAktivnost extends Activity {
 			vibrator.vibrate(400);
 		} else {
 			vibrator.vibrate(new long[]{0,100,50,100,50,100}, -1);
+		}
+	}
+	
+	private void podesiVisinu() {
+		LinearLayout layoutGornji = (LinearLayout) findViewById(R.id.linearGornji);
+		LinearLayout layoutDonji = (LinearLayout) findViewById(R.id.linearDonji);
+		
+		RelativeLayout.LayoutParams paramsG =  (RelativeLayout.LayoutParams) layoutGornji.getLayoutParams();
+		RelativeLayout.LayoutParams paramsD = (RelativeLayout.LayoutParams) layoutDonji.getLayoutParams();
+		
+		int razlika = paramsD.height-paramsG.height;
+		if(razlika>0){
+			paramsG.height=paramsD.height;
+		} else {
+			paramsD.height=paramsG.height;
 		}
 	}
 

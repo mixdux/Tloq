@@ -8,8 +8,6 @@ import com.example.pedagogijadidaktikarad.UcitajPitanjeAktivnost;
 import poslovnaLogika.DatabaseBroker;
 import poslovnaLogika.Kontroler;
 import domen.PitanjeStat;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -121,7 +119,7 @@ public class OpcijePitanja extends Activity {
 	private void prikaziPromeniDijalog(PitanjeStat pitanje) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		final PitanjeStat pit = pitanje;
-		builder.setMessage("Da li želite da izmenite pitanje?")
+		builder.setMessage("Da li ï¿½elite da izmenite pitanje?")
 				.setCancelable(false)
 				.setPositiveButton("Da", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -143,9 +141,9 @@ public class OpcijePitanja extends Activity {
 	
 	private void prikaziResetujDijalog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		String poruka = "Da li ste sigurni da želite resetovati statistiku odabranih pitanja?";
+		String poruka = "Da li ste sigurni da ï¿½elite resetovati statistiku odabranih pitanja?";
 		if (selektovanaPitanja.size()==1){
-			poruka = "Da li ste sigurni da želite resetovati statistiku odabranog pitanja?";
+			poruka = "Da li ste sigurni da ï¿½elite resetovati statistiku odabranog pitanja?";
 		}
 		builder.setMessage(poruka)
 				.setCancelable(false)
@@ -171,10 +169,10 @@ public class OpcijePitanja extends Activity {
 	
 	private void prikaziObrisiDijalog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		String poruka = "Da li ste sigurni da želite potpuno obrisati odabrana pitanja?";
+		String poruka = "Da li ste sigurni da ï¿½elite potpuno obrisati odabrana pitanja?";
 		final boolean visePitanja;
 		if (selektovanaPitanja.size()==1){
-			poruka = "Da li ste sigurni da želite potpuno obrisati odabrano pitanje?";
+			poruka = "Da li ste sigurni da ï¿½elite potpuno obrisati odabrano pitanje?";
 			visePitanja=false;
 		} else {
 			visePitanja = true;
@@ -191,16 +189,16 @@ public class OpcijePitanja extends Activity {
 						adapter = new AdapterListe(act, dbb.vratiSvaPitanja(false), true);
 						lista.setAdapter(adapter);
 						if (visePitanja){
-							Toast.makeText(getApplicationContext(), "Pitanja su uspešno obrisana!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), "Pitanja su uspeï¿½no obrisana!", Toast.LENGTH_SHORT).show();
 						} else {
-							Toast.makeText(getApplicationContext(), "Pitanje je uspešno obrisano!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), "Pitanje je uspeï¿½no obrisano!", Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
 		AlertDialog alert = builder.create();
 		alert.setButton(android.content.DialogInterface.BUTTON_NEGATIVE, "Ne", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						Toast.makeText(getApplicationContext(), "Ne briši", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "Ne briï¿½i", Toast.LENGTH_SHORT).show();
 					}
 				});		
 

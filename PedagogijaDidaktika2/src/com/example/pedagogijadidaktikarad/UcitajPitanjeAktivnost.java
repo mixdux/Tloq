@@ -9,6 +9,7 @@ import java.util.UUID;
 import com.example.pedagogijadidaktika2.R;
 
 import poslovnaLogika.DatabaseBroker;
+import poslovnaLogika.KolekcijaStatPitanja;
 import poslovnaLogika.Kontroler;
 import domen.Pitanje;
 import domen.PitanjeStat;
@@ -46,7 +47,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 		final EditText tvOdg3 = (EditText) findViewById(R.id.etOdgovor3);
 		final EditText tvOdg4 = (EditText) findViewById(R.id.etOdgovor4);
 		final EditText tvRazrada = (EditText) findViewById(R.id.etRazrada);
-
+		
 		final boolean promeniPitanje = this.getIntent().getExtras()
 				.getBoolean(("promeni"));
 		final List<PitanjeStat> pitanjeKontejner = new ArrayList<PitanjeStat>();
@@ -123,6 +124,8 @@ public class UcitajPitanjeAktivnost extends Activity {
 						if ((new DatabaseBroker(getApplicationContext())).promeniPitanje(pist));
 						Toast.makeText(getApplicationContext(), "Pitanje je uspešno promenjeno!",
 								Toast.LENGTH_SHORT).show();
+						Kontroler.vratiObjekat().getKolekcijaStatPitanja().izbaciStatPitanje(pitanjeKontejner.get(0));
+						Kontroler.vratiObjekat().getKolekcijaStatPitanja().DodajPitanje(pist);
 						finish();
 						}
 						else {

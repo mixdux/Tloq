@@ -152,7 +152,7 @@ public class GlavnaAktivnost extends Activity {
 		break;
 		
 		case 3:
-			Kontroler.vratiObjekat().UcitajStatPitanja(new KolekcijaStatPitanja(new DatabaseBroker(getApplicationContext()).vratiSvaPitanja(true)));
+			//Kontroler.vratiObjekat().UcitajStatPitanja(new KolekcijaStatPitanja(new DatabaseBroker(getApplicationContext()).vratiSvaPitanja(true)));
 		break;
 		}
 	}

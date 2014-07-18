@@ -16,7 +16,7 @@ public class KolekcijaStatPitanja {
 		this.pitanjaStat = pitanja;
 	}
 	
-	public static List<PitanjeStat> generišiStatListu(List<Pitanje> pitanja){
+	public static List<PitanjeStat> generisiStatListu(List<Pitanje> pitanja){
 		List<PitanjeStat> kolekcijaStatPitanja = new ArrayList<PitanjeStat>();
 		for (Pitanje pi : pitanja){
 			kolekcijaStatPitanja.add(new PitanjeStat(pi));

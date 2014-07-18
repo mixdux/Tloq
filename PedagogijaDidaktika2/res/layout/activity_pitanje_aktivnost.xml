@@ -6,12 +6,58 @@
     tools:context="com.example.pedagogijadidaktikarad.PitanjeAktivnost"
     tools:ignore="MergeRootFrame" >
 
+    <LinearLayout
+        android:id="@+id/linearDonji"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_above="@+id/jbPovratak"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/jbOdgovor4"
+            style="@style/button"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/jbOdgovor3"
+            style="@style/button"
+            android:text="Button" />
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearGornji"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_above="@+id/linearDonji"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/jbOdgovor2"
+            style="@style/button"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/jbOdgovor1"
+            style="@style/button"
+            android:text="Button" />
+        
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tvPrikazPitanja"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textAlignment="gravity"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -21,39 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="10dp"
         android:text="Povratak" />
-
-    <Button
-        android:id="@+id/jbOdgovor4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/jbPovratak"
-        android:layout_alignParentRight="true"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/jbOdgovor3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/jbPovratak"
-        android:layout_alignParentLeft="true"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/jbOdgovor2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/jbOdgovor4"
-        android:layout_alignParentRight="true"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/jbOdgovor1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/jbOdgovor2"
-        android:text="Button" />
 
 </RelativeLayout>
