@@ -7,8 +7,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabseCreator extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 2;
-	public static final String COLUMN_ID = "_id";
 	public static final String DATABASE_NAME = "PitanjaDB";
+	
+	public static final String COLUMN_ID = "_id";
+	public static final String NOTES= "notes";
+	public static final String ALLUNIQUE= "auid";
 	
 	public static final String IME_TABELE = "pitanja";
 	public static final String TEXT_PITANJA = "tekst_pitanja";
@@ -23,10 +26,17 @@ public class DatabseCreator extends SQLiteOpenHelper {
 	public static final String NETACNI= "broj_netacnih_odgovora";
 	public static final String VREMEODGOVORA= "vreme_za_odgovor";
 	public static final String POJASNJENJE= "dodatne_informacije";
-	public static final String NOTES= "notes";
-	public static final String ALLUNIQUE= "auid";
 	
-	private static final String DATABSE_CREATE = "CREATE TABLE "
+	public static final String IME_SET_TABELE = "setPitanja";
+	public static final String IME_SETA = "ime_seta";
+	public static final String IME_AUTORA = "ime_autora";
+	public static final String IME_DOPRINOSIOCA = "ime_dopr";
+	
+	public static final String IME_PRIPADA_TABELE = "pitanjePripada";
+	public static final String ID_PITANJA = "id_pitanje";
+	public static final String ID_SETA = "id_set";
+	
+	private static final String CREATE_PITANJA = "CREATE TABLE "
 			+ IME_TABELE + "( "
 /*0*/		+ COLUMN_ID + " integer primary key autoincrement,"
 /*1*/		+ TEXT_PITANJA +" TEXT, "
@@ -45,13 +55,33 @@ public class DatabseCreator extends SQLiteOpenHelper {
 			+ ALLUNIQUE + " TEXT"
 			+ ");";
 
+	private static final String CREATE_SET = "CREATE TABLE "
+			+ IME_SET_TABELE + "( "
+/*0*/		+ COLUMN_ID + " integer primary key autoincrement,"
+/*1*/		+ IME_SETA +" TEXT, "
+/*2*/		+ IME_AUTORA +" TEXT, "
+			+ IME_DOPRINOSIOCA +" TEXT, "
+			+ NOTES +" TEXT, "
+/*5*/		+ ALLUNIQUE +" TEXT "
+			+ ");";
+	
+	private static final String CREATE_PRIPADA = "CREATE TABLE "
+			+ IME_PRIPADA_TABELE + "( "
+/*0*/		+ COLUMN_ID + " integer primary key autoincrement,"
+/*1*/		+ ID_PITANJA +" TEXT, "
+			+ ID_SETA +" TEXT "
+			+ ");";
+	
 	DatabseCreator(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(DATABSE_CREATE);
+		db.execSQL(CREATE_PITANJA);
+		db.execSQL(CREATE_SET);
+		db.execSQL(CREATE_PRIPADA);
+		DatabaseBroker.dodajGenericSetPitanja("Opšta pitanja");
 	}
 
 	@Override

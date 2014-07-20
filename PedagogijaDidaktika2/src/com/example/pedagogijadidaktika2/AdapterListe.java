@@ -132,7 +132,8 @@ public class AdapterListe extends BaseAdapter {
 		public TextView netacni;
 		public TextView vreme;
 		public TextView rejting;
-		
+		public TextView imeSeta;
+		public TextView autorSeta;
 	}
 
 }

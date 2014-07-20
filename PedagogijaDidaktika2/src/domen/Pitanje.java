@@ -1,6 +1,9 @@
 package domen;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 
@@ -91,5 +94,24 @@ public class Pitanje implements Serializable{
 		return kuf;
 	}
 	
+	public static String napraviAUID() {
+		String auid = "";
+		auid += new SimpleDateFormat("ddMMyyyy").format(new Date()) + "";
+		auid += dajSekundeOdPocetkaDana() + "-";
+		auid += java.util.UUID.randomUUID();
+		return auid;
+	}
+	
+	public static long dajSekundeOdPocetkaDana(){
+		Calendar c = Calendar.getInstance();
+		long now = c.getTimeInMillis();
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		long passed = now - c.getTimeInMillis();
+		long secondsPassed = passed / 1000;
+		return secondsPassed;
+	}
 	
 }

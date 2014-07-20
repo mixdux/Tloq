@@ -57,8 +57,6 @@ public class PitanjeAktivnost extends Activity {
 		bpovratak = (Button) findViewById(R.id.jbPovratak);
 		Log.i(Konstante.TAG, "Povezao se sa formom");
 
-		podesiVisinu();
-		
 		List<PitanjeStat> pitanja = Kontroler.vratiObjekat()
 				.getKolekcijaStatPitanja().getPitanja();
 
@@ -86,10 +84,6 @@ public class PitanjeAktivnost extends Activity {
 			break;
 		}
 		
-		if (pitanja.size()==0) {
-			
-		}
-		
 		final Vibrator vibrator = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 		
 		String tacanOdgovor = aktuelnoPitanje.getOdgovori()[Integer.parseInt(aktuelnoPitanje.getOdgovori()[0])];
@@ -104,7 +98,7 @@ public class PitanjeAktivnost extends Activity {
 		bOdgovor4.setText(odgovori.get(3));
 		tacan = odgovori.indexOf(tacanOdgovor)+1;
 		
-		podesiVisinu();
+		//podesiVisinu();
 		
 		final int vremeUcitavanja = (int) System.currentTimeMillis();
 
@@ -124,7 +118,6 @@ public class PitanjeAktivnost extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				int vel = bOdgovor1.getHeight();
 				if (tacan == 1) {
 					int vremeOdgovora = (int) System.currentTimeMillis();
 					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
@@ -227,7 +220,6 @@ public class PitanjeAktivnost extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				int vel = bOdgovor1.getHeight();
 				if (tacan == 4) {
 					int vremeOdgovora = (int) System.currentTimeMillis();
 					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
@@ -301,7 +293,7 @@ public class PitanjeAktivnost extends Activity {
 		}
 	}
 	
-	private void podesiVisinu() {
+	/*private void podesiVisinu() {
 		LinearLayout layoutGornji = (LinearLayout) findViewById(R.id.linearGornji);
 		LinearLayout layoutDonji = (LinearLayout) findViewById(R.id.linearDonji);
 		
@@ -314,6 +306,6 @@ public class PitanjeAktivnost extends Activity {
 		} else {
 			paramsD.height=paramsG.height;
 		}
-	}
+	}*/
 
 }

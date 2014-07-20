@@ -1,6 +1,7 @@
 package com.example.pedagogijadidaktikarad;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
@@ -13,8 +14,10 @@ import poslovnaLogika.KolekcijaStatPitanja;
 import poslovnaLogika.Kontroler;
 import domen.Pitanje;
 import domen.PitanjeStat;
+import domen.SetPitanja;
 import android.app.Activity;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -22,10 +25,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class UcitajPitanjeAktivnost extends Activity {
@@ -33,6 +38,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 	private Button bNazad;
 	private String tac, odg1, odg2, odg3, odg4, mTekstPitanje, razrada;
 	final String TAG = "PedagogijaSaDidaktikom";
+	final DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
 	private Activity trenutniActivity;
 
 	@Override
@@ -47,6 +53,27 @@ public class UcitajPitanjeAktivnost extends Activity {
 		final EditText tvOdg3 = (EditText) findViewById(R.id.etOdgovor3);
 		final EditText tvOdg4 = (EditText) findViewById(R.id.etOdgovor4);
 		final EditText tvRazrada = (EditText) findViewById(R.id.etRazrada);
+		
+		final EditText tvSet = (EditText) findViewById(R.id.unosNovogSeta);
+		final Spinner setoviDD = (Spinner) findViewById(R.id.dropDownSetovi);
+		List<SetPitanja> setovi = new ArrayList<SetPitanja>();
+		setovi.add(new SetPitanja(null, null, "Novi set"));
+		setovi.addAll(dbb.vratiSveSetove());
+		ArrayAdapter<SetPitanja> adapter = new ArrayAdapter<SetPitanja>(this, android.R.layout.simple_spinner_item, setovi);
+		setoviDD.setAdapter(adapter);
+
+		setoviDD.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SetPitanja selektovaniSet = (SetPitanja) setoviDD.getSelectedItem();
+				if (selektovaniSet.getAUIDseta().equals(null)){
+					tvSet.setEnabled(true);
+				} else {
+					tvSet.setEnabled(false);
+				}
+			}
+		});
+		
 		
 		final boolean promeniPitanje = this.getIntent().getExtras()
 				.getBoolean(("promeni"));
@@ -121,7 +148,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 					if (promeniPitanje) {
 						PitanjeStat pist = proveriPromene(pitanjeKontejner.get(0));
 						if(pist!=null){
-						if ((new DatabaseBroker(getApplicationContext())).promeniPitanje(pist));
+						if (dbb.promeniPitanje(pist, pitanjeKontejner.get(0).getPitanje().getJedinstveniIDikada()));
 						Toast.makeText(getApplicationContext(), "Pitanje je uspešno promenjeno!",
 								Toast.LENGTH_SHORT).show();
 						Kontroler.vratiObjekat().getKolekcijaStatPitanja().izbaciStatPitanje(pitanjeKontejner.get(0));
@@ -145,7 +172,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 				Log.e("XYZ", mTekstPitanje + odgovori[0] + odgovori[1]
 						+ odgovori[2] + odgovori[3] + odgovori[4]);
 				String kreator = Kontroler.vratiObjekat().getAktivniKorisnik();
-				String auid = napraviAUID();
+				String auid = Pitanje.napraviAUID();
 				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, kreator,
 						auid);
 				pitanje.setPojasnjenje(razrada);
@@ -157,8 +184,6 @@ public class UcitajPitanjeAktivnost extends Activity {
 				 */
 				PitanjeStat novoPitanje = new PitanjeStat(pitanje);
 				try {
-					DatabaseBroker dbb = new DatabaseBroker(
-							getApplicationContext());
 					dbb.dodajPitanje(novoPitanje);
 				} catch (Exception ex) {
 					Toast.makeText(getApplicationContext(),
@@ -234,16 +259,10 @@ public class UcitajPitanjeAktivnost extends Activity {
 				((EditText) findViewById(R.id.etOdgovor3)).getText().toString(),
 				((EditText) findViewById(R.id.etOdgovor4)).getText().toString()};
 		String aktivniKorisnik = Kontroler.vratiObjekat().getAktivniKorisnik();
-		PitanjeStat pitStat = new PitanjeStat(new Pitanje(((EditText) findViewById(R.id.etTekstPitanja)).getText().toString(), odg, aktivniKorisnik, pitanjeStaro.getPitanje().getJedinstveniIDikada()));
+		String noviJedIdIkada = pitanjeStaro.getPitanje().getJedinstveniIDikada().replace(pitanjeStaro.getPitanje().getJedinstveniIDikada().split("-")[0], new SimpleDateFormat("ddMMyyyy").format(new Date())+Pitanje.dajSekundeOdPocetkaDana());
+		PitanjeStat pitStat = new PitanjeStat(new Pitanje(((EditText) findViewById(R.id.etTekstPitanja)).getText().toString(), odg, aktivniKorisnik, noviJedIdIkada));
 		return pitStat;
 	}
-
-	private String napraviAUID() {
-		String auid = "";
-		auid += new SimpleDateFormat("ddMMyyyy").format(new Date()) + "-";
-		auid += java.util.UUID.randomUUID();
-		return auid;
-
-	}
+	
 
 }

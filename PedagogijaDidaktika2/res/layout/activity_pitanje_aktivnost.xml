@@ -7,42 +7,84 @@
     tools:ignore="MergeRootFrame" >
 
     <LinearLayout
-        android:id="@+id/linearDonji"
+        android:id="@+id/linearSkupa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_above="@+id/jbPovratak"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/jbOdgovor4"
-            style="@style/button"
-            android:text="Button" />
-
-        <Button
-            android:id="@+id/jbOdgovor3"
-            style="@style/button"
-            android:text="Button" />
-        
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearGornji"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_above="@+id/linearDonji"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/jbOdgovor2"
-            style="@style/button"
-            android:text="Button" />
+        <LinearLayout
+            android:id="@+id/prviOdgovor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/jbOdgovor1"
-            style="@style/button"
-            android:text="Button" />
+            <TextView
+                android:id="@+id/brojOdgovora1"
+                style="@style/buttonNumber"
+                android:text="1)" />
+
+            <Button
+                android:id="@+id/jbOdgovor4"
+                style="@style/button"
+                android:text="Button" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/drugiOdgovor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/brojOdgovora3"
+                style="@style/buttonNumber"
+                android:text="2)" />
+
+            <Button
+                android:id="@+id/jbOdgovor3"
+                style="@style/button"
+                android:text="Button" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/treciOdgovor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/brojOdgovora3"
+                style="@style/buttonNumber"
+                android:text="3)" />
+
+            <Button
+                android:id="@+id/jbOdgovor2"
+                style="@style/button"
+                android:text="Button" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cetvrtiOdgovor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/brojOdgovora4"
+                style="@style/buttonNumber"
+                android:text="4)" />
+
+            <Button
+                android:id="@+id/jbOdgovor1"
+                style="@style/button"
+                android:text="Button" />
+        </LinearLayout>
         
     </LinearLayout>
 
@@ -53,12 +95,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_above="@+id/linearSkupa"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:gravity="center_horizontal"
-        android:textAlignment="gravity"
         android:text="Large Text"
+        android:textAlignment="gravity"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button

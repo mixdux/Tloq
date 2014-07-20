@@ -2,10 +2,13 @@ package poslovnaLogika;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import domen.Pitanje;
 import domen.PitanjeStat;
+import domen.SetPitanja;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,12 +18,14 @@ import android.database.sqlite.SQLiteDatabase;
 public class DatabaseBroker {
 	
 	private SQLiteDatabase database;
+	private static SQLiteDatabase staticDatabase;
 	private DatabseCreator dbHelper;
 	private String column = DatabseCreator.COLUMN_ID;
 
 	public DatabaseBroker(Context context) {
 		dbHelper = new DatabseCreator(context);
 		database = dbHelper.getWritableDatabase();
+		staticDatabase = dbHelper.getWritableDatabase();
 	}
 
 	public SQLiteDatabase getDatabase() {
@@ -57,6 +62,29 @@ public class DatabaseBroker {
 
 		long i = database.insert(DatabseCreator.IME_TABELE, null, values);
 		database.close();
+	}
+	
+	//Može da se optimizuje ako se iskopira logika od vratiSvaPitanja i da se u toku kreiranja pitanja izvuče i set
+	public HashMap<String, List<PitanjeStat>> vratiSetIPitanja(){
+		HashMap<String, List<PitanjeStat>> setIPitanja = new HashMap<String, List<PitanjeStat>>();
+		List<PitanjeStat> izvucenaPitanja = vratiSvaPitanja(false);
+		for (PitanjeStat pist : izvucenaPitanja){
+			String selectQuery = "SELECT * FROM " + DatabseCreator.IME_PRIPADA_TABELE
+					+ " WHERE " + DatabseCreator.ID_PITANJA + "=?";
+			String jedID =  pist.getPitanje().getJedinstveniIDikada();
+			Cursor cursor = database.rawQuery(selectQuery, new String[] { jedID });
+			if (cursor.moveToFirst()) {
+				String idSeta = cursor.getString(2);
+				if (setIPitanja.containsKey(idSeta)){
+					List<PitanjeStat> uzetaLista = setIPitanja.get(idSeta);
+					uzetaLista.add(pist);
+				} else {
+					final PitanjeStat pistDummy = pist;
+					setIPitanja.put(idSeta, new ArrayList<PitanjeStat>(){{add(pistDummy);}});
+				}
+			}
+			}
+		return setIPitanja;
 	}
 
 	public List<PitanjeStat> vratiSvaPitanja(boolean samoAktivna) {
@@ -170,7 +198,7 @@ public class DatabaseBroker {
 		return true;
 	}
 	
-	public boolean promeniPitanje(PitanjeStat pit){
+	public boolean promeniPitanje(PitanjeStat pit, String idStarog){
 		ContentValues args = new ContentValues();
 		args.put(DatabseCreator.TEXT_PITANJA, pit.getPitanje().getmTextPitanja());
 		args.put(DatabseCreator.PRVI_ODGOVOR,  pit.getPitanje().getOdgovori()[1]);
@@ -180,8 +208,37 @@ public class DatabaseBroker {
 		args.put(DatabseCreator.TACAN_ODGOVOR, pit.getPitanje().getOdgovori()[0]);
 		args.put(DatabseCreator.POJASNJENJE, pit.getPitanje().getPojasnjenje());
 		args.put(DatabseCreator.KREATOR, pit.getPitanje().getKreator());
-		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { pit.getPitanje().getJedinstveniIDikada() });
+		args.put(DatabseCreator.ALLUNIQUE, pit.getPitanje().getJedinstveniIDikada());
+		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { idStarog });
 		return true;
+	}
+	
+	public static void dodajGenericSetPitanja(String ime){
+		ContentValues values = new ContentValues();
+		values.put(DatabseCreator.IME_SETA, ime);
+		values.put(DatabseCreator.IME_AUTORA, Kontroler.vratiObjekat().getAktivniKorisnik());
+		values.put(DatabseCreator.IME_DOPRINOSIOCA, "");
+		values.put(DatabseCreator.NOTES, "");
+		values.put(DatabseCreator.ALLUNIQUE, SetPitanja.generisiAUIDSeta());
+		long i = staticDatabase.insert(DatabseCreator.IME_SET_TABELE, null, values);
+	}
+	
+	public List<SetPitanja> vratiSveSetove(){
+		List<SetPitanja> sviSetovi = new ArrayList<SetPitanja>();
+		String selectQuery = "SELECT * FROM" + DatabseCreator.IME_SET_TABELE;
+		Cursor cursor = database.rawQuery(selectQuery, null);
+		if (cursor.moveToFirst()) {
+			do {
+				SetPitanja sPit = new SetPitanja();
+				sPit.setImeSeta(cursor.getString(1));
+				sPit.setImeKreatora(cursor.getString(2));
+				sPit.setImeDoprinosioca(cursor.getString(3));
+				sPit.setNotes(cursor.getString(4));
+				sPit.setAUIDseta(cursor.getString(5));
+				sviSetovi.add(sPit);
+			} while (cursor.moveToNext());
+		}
+		return sviSetovi;
 	}
 	
 }
