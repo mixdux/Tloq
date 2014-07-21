@@ -52,7 +52,8 @@ public class DatabseCreator extends SQLiteOpenHelper {
 			+ VREMEODGOVORA + " INTEGER, "
 			+ POJASNJENJE + " TEXT, "
 /*13*/		+ NOTES + " TEXT, "
-			+ ALLUNIQUE + " TEXT"
+			+ ALLUNIQUE + " TEXT, "
+			+ ID_SETA + " TEXT"
 			+ ");";
 
 	private static final String CREATE_SET = "CREATE TABLE "
@@ -80,8 +81,7 @@ public class DatabseCreator extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_PITANJA);
 		db.execSQL(CREATE_SET);
-		db.execSQL(CREATE_PRIPADA);
-		DatabaseBroker.dodajGenericSetPitanja("Opšta pitanja");
+		//db.execSQL(CREATE_PRIPADA);
 	}
 
 	@Override

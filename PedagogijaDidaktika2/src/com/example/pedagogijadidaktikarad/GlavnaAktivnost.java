@@ -110,7 +110,12 @@ public class GlavnaAktivnost extends Activity {
 		bKaListiPitanja.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				List<PitanjeStat> pist = new DatabaseBroker(getApplicationContext()).vratiSvaPitanja(false);
+				DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
+				List<PitanjeStat> pist = dbb.vratiSvaPitanja(false);
+				String imeOpstegSeta = "Opšta pitanja";
+				if (!dbb.daLiPostojiSetSaImenom(imeOpstegSeta)){
+					dbb.dodajGenericSetPitanja(imeOpstegSeta);
+				}
 				if (pist.size() == 0) {
 					Toast.makeText(getApplicationContext(),
 							"Ne postoje pitanja u bazi, molimo učitajte.",

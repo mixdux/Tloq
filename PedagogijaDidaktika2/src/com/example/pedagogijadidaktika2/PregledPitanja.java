@@ -1,5 +1,6 @@
 package com.example.pedagogijadidaktika2;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.example.pedagogijadidaktikarad.PitanjeAktivnost;
@@ -26,14 +27,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class PregledPitanja extends Activity {
 
-	AdapterListe adapter;
-	ListView lista;
+	AdapterProsiriveListe adapter;
+	ExpandableListView lista;
 
 	boolean longHoldShield = false;
 
@@ -42,11 +46,11 @@ public class PregledPitanja extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pregled_pitanja);
 
-		final List<PitanjeStat> svaPitanjaUBazi = new DatabaseBroker(this)
-				.vratiSvaPitanja(false);
+		//final List<PitanjeStat> svaPitanjaUBazi = new DatabaseBroker(this).vratiSvaPitanja(false);
+		final HashMap<String, List<PitanjeStat>> pitanjaISetovi = new DatabaseBroker(this).vratiSetIPitanja();
 
-		lista = (ListView) this.findViewById(R.id.listaPitanjaMain);
-		adapter = new AdapterListe(this, svaPitanjaUBazi, false);
+		lista = (ExpandableListView) this.findViewById(R.id.listaPitanjaMain);
+		adapter = new AdapterProsiriveListe(this, new DatabaseBroker(this).vratiSveSetove(), pitanjaISetovi);
 		lista.setAdapter(adapter);
 
 		final Vibrator vibrator = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
@@ -65,7 +69,45 @@ public class PregledPitanja extends Activity {
 			}
 		});
 
-		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		lista.setOnChildClickListener(new OnChildClickListener() {
+ 
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+			@Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                    int groupPosition, int childPosition, long id) {
+            	Button b = (Button) v.findViewById(R.id.onOfMarker);
+				if (!longHoldShield) {
+					vibrator.vibrate(50);
+					ColorDrawable buttonColor = (ColorDrawable) b
+							.getBackground();
+					int color = buttonColor.getColor();
+					PitanjeStat pit = (PitanjeStat) adapter.getChild(groupPosition, childPosition);
+					if (color == Color.BLUE) {
+						b.setBackgroundColor(Color.RED);
+						new DatabaseBroker(getApplicationContext())
+								.updateAktivno(false, pit.getPitanje()
+										.getJedinstveniIDikada());
+						pit.setAktivno(false);
+						Kontroler.vratiObjekat().getKolekcijaStatPitanja()
+								.izbaciStatPitanje(pit);
+					} else {
+						b.setBackgroundColor(Color.BLUE);
+						new DatabaseBroker(getApplicationContext())
+								.updateAktivno(true, pit.getPitanje()
+										.getJedinstveniIDikada());
+						pit.setAktivno(true);
+						Kontroler.vratiObjekat().getKolekcijaStatPitanja()
+								.DodajPitanje(pit);
+					}
+				} else {
+					longHoldShield = false;
+				}
+                return true;
+            }
+        });
+
+		
+		/*lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
@@ -99,7 +141,7 @@ public class PregledPitanja extends Activity {
 					longHoldShield = false;
 				}
 			}
-		});
+		});*/
 
 		/*lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			// http://stackoverflow.com/questions/12244297/how-to-add-multiple-buttons-on-a-single-alertdialog
@@ -119,8 +161,7 @@ public class PregledPitanja extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		adapter = new AdapterListe(this,
-				new DatabaseBroker(this).vratiSvaPitanja(false), false);
+		//adapter = new AdapterListe(this, new DatabaseBroker(this).vratiSvaPitanja(false), false);
 		lista.setAdapter(adapter);
 	}
 

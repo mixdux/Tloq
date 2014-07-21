@@ -25,6 +25,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,14 +40,18 @@ public class UcitajPitanjeAktivnost extends Activity {
 	private Button bNazad;
 	private String tac, odg1, odg2, odg3, odg4, mTekstPitanje, razrada;
 	final String TAG = "PedagogijaSaDidaktikom";
-	final DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
+	private DatabaseBroker dbb;
+	private ArrayAdapter<SetPitanja> adapter;
 	private Activity trenutniActivity;
+	
+	private Spinner setoviDD;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		trenutniActivity = this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ucitaj_pitanje_aktivnost);
+		dbb = new DatabaseBroker(getApplicationContext());
 		final View rootView = (View) findViewById(R.id.container);
 		final EditText tvPitanje = (EditText) findViewById(R.id.etTekstPitanja);
 		final EditText tvOdg1 = (EditText) findViewById(R.id.etOdgovor1);
@@ -54,23 +60,32 @@ public class UcitajPitanjeAktivnost extends Activity {
 		final EditText tvOdg4 = (EditText) findViewById(R.id.etOdgovor4);
 		final EditText tvRazrada = (EditText) findViewById(R.id.etRazrada);
 		
+		setoviDD = (Spinner) findViewById(R.id.dropDownSetovi);
 		final EditText tvSet = (EditText) findViewById(R.id.unosNovogSeta);
-		final Spinner setoviDD = (Spinner) findViewById(R.id.dropDownSetovi);
 		List<SetPitanja> setovi = new ArrayList<SetPitanja>();
 		setovi.add(new SetPitanja(null, null, "Novi set"));
 		setovi.addAll(dbb.vratiSveSetove());
-		ArrayAdapter<SetPitanja> adapter = new ArrayAdapter<SetPitanja>(this, android.R.layout.simple_spinner_item, setovi);
+		adapter = new ArrayAdapter<SetPitanja>(this, android.R.layout.simple_spinner_item, setovi);
 		setoviDD.setAdapter(adapter);
 
-		setoviDD.setOnClickListener(new View.OnClickListener() {
+		setoviDD.setOnItemSelectedListener(new OnItemSelectedListener() {
+
 			@Override
-			public void onClick(View v) {
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
 				SetPitanja selektovaniSet = (SetPitanja) setoviDD.getSelectedItem();
-				if (selektovaniSet.getAUIDseta().equals(null)){
+				if (selektovaniSet.getAUIDseta()==null){
 					tvSet.setEnabled(true);
 				} else {
 					tvSet.setEnabled(false);
 				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				Toast.makeText(getApplicationContext(),
+						"Ništa selektovano u spineru", Toast.LENGTH_SHORT)
+						.show();		
 			}
 		});
 		
@@ -85,7 +100,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 			popuniPromeni(pitanjePromena);
 		}
 
-		rootView.setOnTouchListener(new View.OnTouchListener() {
+		(findViewById(R.id.scrollViewUnosPitanja)).setOnTouchListener(new View.OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -104,6 +119,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 				tvOdg2.clearFocus();
 				tvOdg3.clearFocus();
 				tvOdg4.clearFocus();
+				tvSet.clearFocus();
 				tvRazrada.clearFocus();
 			}
 		});
@@ -148,7 +164,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 					if (promeniPitanje) {
 						PitanjeStat pist = proveriPromene(pitanjeKontejner.get(0));
 						if(pist!=null){
-						if (dbb.promeniPitanje(pist, pitanjeKontejner.get(0).getPitanje().getJedinstveniIDikada()));
+						if (dbb.promeniPitanje(pist));
 						Toast.makeText(getApplicationContext(), "Pitanje je uspešno promenjeno!",
 								Toast.LENGTH_SHORT).show();
 						Kontroler.vratiObjekat().getKolekcijaStatPitanja().izbaciStatPitanje(pitanjeKontejner.get(0));
@@ -173,8 +189,9 @@ public class UcitajPitanjeAktivnost extends Activity {
 						+ odgovori[2] + odgovori[3] + odgovori[4]);
 				String kreator = Kontroler.vratiObjekat().getAktivniKorisnik();
 				String auid = Pitanje.napraviAUID();
+				String idOdabranogSeta = resolveIDSeta();
 				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, kreator,
-						auid);
+						auid, idOdabranogSeta);
 				pitanje.setPojasnjenje(razrada);
 
 				/*
@@ -211,6 +228,10 @@ public class UcitajPitanjeAktivnost extends Activity {
 	}
 
 	private void popuniPromeni(PitanjeStat pitanjePromena) {
+		SetPitanja AUIDiSet = dbb.vratiSetSaAUID(pitanjePromena.getPitanje().getIdSeta());
+		int pos = adapter.getPosition(AUIDiSet);
+		setoviDD.setSelection(pos);
+		
 		((EditText) findViewById(R.id.etTekstPitanja)).setText(pitanjePromena
 				.getPitanje().getmTextPitanja());
 		((EditText) findViewById(R.id.etOdgovor1)).setText(pitanjePromena
@@ -243,12 +264,14 @@ public class UcitajPitanjeAktivnost extends Activity {
 		int idSelektovanog = ((RadioGroup) findViewById(R.id.rgTacanOdgovor)).getCheckedRadioButtonId();
 		RadioButton selektovanoDugme = (RadioButton) findViewById(idSelektovanog);
 		String selText = selektovanoDugme.getText().toString();
+		String idOdabranogSeta = resolveIDSeta();
 		if (((EditText) findViewById(R.id.etTekstPitanja)).getText().toString().equals(pitanjeStaro.getPitanje().getmTextPitanja())
 				&& ((EditText) findViewById(R.id.etOdgovor1)).getText().toString().equals(pitanjeStaro.getPitanje().getOdgovori()[1])
 				&& ((EditText) findViewById(R.id.etOdgovor2)).getText().toString().equals(pitanjeStaro.getPitanje().getOdgovori()[2])
 				&& ((EditText) findViewById(R.id.etOdgovor3)).getText().toString().equals(pitanjeStaro.getPitanje().getOdgovori()[3])
 				&& ((EditText) findViewById(R.id.etOdgovor4)).getText().toString().equals(pitanjeStaro.getPitanje().getOdgovori()[4])
-				&& ((EditText) findViewById(R.id.etRazrada)).getText().toString().equals(pitanjeStaro.getPitanje().getPojasnjenje())){
+				&& ((EditText) findViewById(R.id.etRazrada)).getText().toString().equals(pitanjeStaro.getPitanje().getPojasnjenje())
+				&& idOdabranogSeta.equals(pitanjeStaro.getPitanje().getIdSeta())){
 				if (selText.equals(pitanjeStaro.getPitanje().getOdgovori()[0])){
 					return null;
 				}
@@ -259,9 +282,20 @@ public class UcitajPitanjeAktivnost extends Activity {
 				((EditText) findViewById(R.id.etOdgovor3)).getText().toString(),
 				((EditText) findViewById(R.id.etOdgovor4)).getText().toString()};
 		String aktivniKorisnik = Kontroler.vratiObjekat().getAktivniKorisnik();
-		String noviJedIdIkada = pitanjeStaro.getPitanje().getJedinstveniIDikada().replace(pitanjeStaro.getPitanje().getJedinstveniIDikada().split("-")[0], new SimpleDateFormat("ddMMyyyy").format(new Date())+Pitanje.dajSekundeOdPocetkaDana());
-		PitanjeStat pitStat = new PitanjeStat(new Pitanje(((EditText) findViewById(R.id.etTekstPitanja)).getText().toString(), odg, aktivniKorisnik, noviJedIdIkada));
+		PitanjeStat pitStat = new PitanjeStat(new Pitanje(((EditText) findViewById(R.id.etTekstPitanja)).getText().toString(), odg, aktivniKorisnik, pitanjeStaro.getPitanje().getJedinstveniIDikada(), idOdabranogSeta));
 		return pitStat;
+	}
+	
+	private String resolveIDSeta(){
+		SetPitanja setPitanja = (SetPitanja) setoviDD.getSelectedItem();
+		String idOdabranogSeta = setPitanja.getAUIDseta();
+		if (idOdabranogSeta==null){
+			idOdabranogSeta = dbb.ubaciSetPitanja(((EditText) findViewById(R.id.unosNovogSeta)).getText().toString());
+			if (idOdabranogSeta == null){
+				return null;
+			}
+		}
+		return idOdabranogSeta;
 	}
 	
 

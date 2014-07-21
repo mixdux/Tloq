@@ -73,5 +73,18 @@ public class SetPitanja implements Serializable{
 			return auid;
 	}
 	
+	@Override
+	public String toString() {
+		return ImeSeta;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof SetPitanja)){
+			return false;
+		}
+		SetPitanja sp = (SetPitanja) o;
+		return this.AUIDseta.equals(sp.AUIDseta);
+	}
 	
 }

@@ -16,12 +16,21 @@ public class Pitanje implements Serializable{
 	private String kreator;
 	private String pojasnjenje;
 	private String notes;
+	private String idSeta;
 	private String jedinstveniIDikada;
 	
 	public void setJedinstveniIDikada(String jedinstveniIDikada) {
 		if (this.jedinstveniIDikada.equals("")){
 		this.jedinstveniIDikada = jedinstveniIDikada;
 		}
+	}
+
+	public String getIdSeta() {
+		return idSeta;
+	}
+
+	public void setIdSeta(String idSeta) {
+		this.idSeta = idSeta;
 	}
 
 	public String getJedinstveniIDikada() {
@@ -70,19 +79,21 @@ public class Pitanje implements Serializable{
 
 	
 	
-	public Pitanje(String mTextPitanja, String[] odgovori, String kreator, String auid) {
+	public Pitanje(String mTextPitanja, String[] odgovori, String kreator, String auid, String set) {
 		super();
 		this.mTextPitanja = mTextPitanja;
 		this.odgovori = odgovori;
 		this.kreator = kreator;
 		this.pojasnjenje = "";
 		this.notes = "";
+		idSeta = set;
 		jedinstveniIDikada = auid;
 	}
 	
 	public Pitanje(){
 		odgovori = new  String[5];
 		jedinstveniIDikada = "";
+		idSeta = "";
 	}
 	
 	public static String userFriendlyKreator(String kreator){

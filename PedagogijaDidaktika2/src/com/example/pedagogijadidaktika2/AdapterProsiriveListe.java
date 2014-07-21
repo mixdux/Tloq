@@ -117,7 +117,7 @@ public class AdapterProsiriveListe extends BaseExpandableListAdapter{
 		}
 		ViewHolder holder = (ViewHolder) vi.getTag();
 		final SetPitanja set = (SetPitanja) getGroup(groupPosition);
-		holder.autorSeta.setText(set.getImeKreatora());
+		holder.autorSeta.setText(Pitanje.userFriendlyKreator(set.getImeKreatora()));
 		holder.imeSeta.setText(set.getImeSeta());		
 		return vi;
 	}

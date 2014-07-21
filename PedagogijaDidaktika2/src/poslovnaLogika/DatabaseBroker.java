@@ -18,14 +18,12 @@ import android.database.sqlite.SQLiteDatabase;
 public class DatabaseBroker {
 	
 	private SQLiteDatabase database;
-	private static SQLiteDatabase staticDatabase;
 	private DatabseCreator dbHelper;
 	private String column = DatabseCreator.COLUMN_ID;
 
 	public DatabaseBroker(Context context) {
 		dbHelper = new DatabseCreator(context);
 		database = dbHelper.getWritableDatabase();
-		staticDatabase = dbHelper.getWritableDatabase();
 	}
 
 	public SQLiteDatabase getDatabase() {
@@ -49,6 +47,7 @@ public class DatabaseBroker {
 		values.put(DatabseCreator.KREATOR, pitanje.getPitanje().getKreator());
 		values.put(DatabseCreator.POJASNJENJE, pitanje.getPitanje()
 				.getPojasnjenje());
+		values.put(DatabseCreator.ID_SETA, pitanje.getPitanje().getIdSeta());
 		values.put(DatabseCreator.ALLUNIQUE, pitanje.getPitanje()
 				.getJedinstveniIDikada());
 		if (pitanje.isAktivno()) {
@@ -69,18 +68,17 @@ public class DatabaseBroker {
 		HashMap<String, List<PitanjeStat>> setIPitanja = new HashMap<String, List<PitanjeStat>>();
 		List<PitanjeStat> izvucenaPitanja = vratiSvaPitanja(false);
 		for (PitanjeStat pist : izvucenaPitanja){
-			String selectQuery = "SELECT * FROM " + DatabseCreator.IME_PRIPADA_TABELE
-					+ " WHERE " + DatabseCreator.ID_PITANJA + "=?";
-			String jedID =  pist.getPitanje().getJedinstveniIDikada();
+			String selectQuery = "SELECT * FROM " + DatabseCreator.IME_SET_TABELE
+					+ " WHERE " + DatabseCreator.ALLUNIQUE + "=?";
+			String jedID =  pist.getPitanje().getIdSeta();
 			Cursor cursor = database.rawQuery(selectQuery, new String[] { jedID });
 			if (cursor.moveToFirst()) {
-				String idSeta = cursor.getString(2);
-				if (setIPitanja.containsKey(idSeta)){
-					List<PitanjeStat> uzetaLista = setIPitanja.get(idSeta);
+				if (setIPitanja.containsKey(jedID)){
+					List<PitanjeStat> uzetaLista = setIPitanja.get(jedID);
 					uzetaLista.add(pist);
 				} else {
 					final PitanjeStat pistDummy = pist;
-					setIPitanja.put(idSeta, new ArrayList<PitanjeStat>(){{add(pistDummy);}});
+					setIPitanja.put(jedID, new ArrayList<PitanjeStat>(){{add(pistDummy);}});
 				}
 			}
 			}
@@ -110,6 +108,7 @@ public class DatabaseBroker {
 				pit.setPojasnjenje(cursor.getString(12));
 				pit.setNotes(cursor.getString(13));
 				pit.setJedinstveniIDikada(cursor.getString(14));
+				pit.setIdSeta(cursor.getString(15));
 				PitanjeStat pitStat = new PitanjeStat(pit);
 				pitStat.setBrojTacnihOdgovora(cursor.getInt(9));
 				pitStat.setBrojNetacnihOdgovora(cursor.getInt(10));
@@ -122,7 +121,6 @@ public class DatabaseBroker {
 				listaPitanja.add(pitStat);
 			} while (cursor.moveToNext());
 		}
-		database.close();
 		return listaPitanja;
 	}
 
@@ -198,7 +196,7 @@ public class DatabaseBroker {
 		return true;
 	}
 	
-	public boolean promeniPitanje(PitanjeStat pit, String idStarog){
+	public boolean promeniPitanje(PitanjeStat pit){
 		ContentValues args = new ContentValues();
 		args.put(DatabseCreator.TEXT_PITANJA, pit.getPitanje().getmTextPitanja());
 		args.put(DatabseCreator.PRVI_ODGOVOR,  pit.getPitanje().getOdgovori()[1]);
@@ -208,24 +206,40 @@ public class DatabaseBroker {
 		args.put(DatabseCreator.TACAN_ODGOVOR, pit.getPitanje().getOdgovori()[0]);
 		args.put(DatabseCreator.POJASNJENJE, pit.getPitanje().getPojasnjenje());
 		args.put(DatabseCreator.KREATOR, pit.getPitanje().getKreator());
+		args.put(DatabseCreator.ID_SETA, pit.getPitanje().getIdSeta());
 		args.put(DatabseCreator.ALLUNIQUE, pit.getPitanje().getJedinstveniIDikada());
-		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { idStarog });
+		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { pit.getPitanje().getJedinstveniIDikada() });
 		return true;
 	}
 	
-	public static void dodajGenericSetPitanja(String ime){
+	public void dodajGenericSetPitanja(String ime){
 		ContentValues values = new ContentValues();
 		values.put(DatabseCreator.IME_SETA, ime);
 		values.put(DatabseCreator.IME_AUTORA, Kontroler.vratiObjekat().getAktivniKorisnik());
 		values.put(DatabseCreator.IME_DOPRINOSIOCA, "");
 		values.put(DatabseCreator.NOTES, "");
 		values.put(DatabseCreator.ALLUNIQUE, SetPitanja.generisiAUIDSeta());
-		long i = staticDatabase.insert(DatabseCreator.IME_SET_TABELE, null, values);
+		long i = database.insert(DatabseCreator.IME_SET_TABELE, null, values);
+	}
+	
+	public String ubaciSetPitanja(String ime){
+		ContentValues values = new ContentValues();
+		values.put(DatabseCreator.IME_SETA, ime);
+		values.put(DatabseCreator.IME_AUTORA, Kontroler.vratiObjekat().getAktivniKorisnik());
+		values.put(DatabseCreator.IME_DOPRINOSIOCA, "");
+		values.put(DatabseCreator.NOTES, "");
+		String auid = SetPitanja.generisiAUIDSeta();
+		values.put(DatabseCreator.ALLUNIQUE, auid);
+		long i = database.insert(DatabseCreator.IME_SET_TABELE, null, values);
+		if (i!=0){
+			return auid;
+		}
+		return null;
 	}
 	
 	public List<SetPitanja> vratiSveSetove(){
 		List<SetPitanja> sviSetovi = new ArrayList<SetPitanja>();
-		String selectQuery = "SELECT * FROM" + DatabseCreator.IME_SET_TABELE;
+		String selectQuery = "SELECT * FROM " + DatabseCreator.IME_SET_TABELE;
 		Cursor cursor = database.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -240,5 +254,29 @@ public class DatabaseBroker {
 		}
 		return sviSetovi;
 	}
+	
+	public SetPitanja vratiSetSaAUID(String auid){
+		SetPitanja sp = new SetPitanja();
+		String selectQuery = "SELECT * FROM " + DatabseCreator.IME_SET_TABELE + " WHERE "+ DatabseCreator.ALLUNIQUE + "=?";
+		Cursor cursor = database.rawQuery(selectQuery, new String[] { auid });
+		if (cursor.moveToFirst()) {
+				sp.setImeSeta(cursor.getString(1));
+				sp.setImeKreatora(cursor.getString(2));
+				sp.setImeDoprinosioca(cursor.getString(3));
+				sp.setNotes(cursor.getString(4));
+				sp.setAUIDseta(cursor.getString(5));
+		}
+		return sp;
+	}
+	
+	public boolean daLiPostojiSetSaImenom(String ime){
+		String selectQuery = "SELECT * FROM " + DatabseCreator.IME_SET_TABELE + " WHERE "+ DatabseCreator.IME_SETA + "=?";
+		Cursor cursor = database.rawQuery(selectQuery, new String[] { ime });
+		if (cursor.moveToFirst()) {
+				return true;
+		}
+		return false;
+	}
+	
 	
 }
