@@ -113,10 +113,12 @@ public class AdapterProsiriveListe extends BaseExpandableListAdapter{
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.autorSeta = (TextView) vi.findViewById(R.id.autorSeta);
 			viewHolder.imeSeta = (TextView) vi.findViewById(R.id.imeSeta);
+			viewHolder.onOfSet = (Button) vi.findViewById(R.id.onOfHeadingMarker);
 			vi.setTag(viewHolder);
 		}
 		ViewHolder holder = (ViewHolder) vi.getTag();
 		final SetPitanja set = (SetPitanja) getGroup(groupPosition);
+		podesiSetSelekijeDugme(holder.onOfSet, listaDeteta.get(set.getAUIDseta()));
 		holder.autorSeta.setText(Pitanje.userFriendlyKreator(set.getImeKreatora()));
 		holder.imeSeta.setText(set.getImeSeta());		
 		return vi;
@@ -130,6 +132,19 @@ public class AdapterProsiriveListe extends BaseExpandableListAdapter{
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
+	}
+	
+	public static boolean podesiSetSelekijeDugme(Button dugme, List<PitanjeStat> svaPitanjaZaSet){
+		boolean celiSetSelektovan = true;
+		for (PitanjeStat pist : svaPitanjaZaSet){
+			celiSetSelektovan &= pist.isAktivno();
+		}
+		if (celiSetSelektovan) {
+			dugme.setBackgroundColor(Color.BLUE);
+		} else {
+			dugme.setBackgroundColor(Color.RED);
+		}
+		return celiSetSelektovan;
 	}
 
 }

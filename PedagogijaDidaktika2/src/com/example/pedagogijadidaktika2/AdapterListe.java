@@ -134,6 +134,7 @@ public class AdapterListe extends BaseAdapter {
 		public TextView rejting;
 		public TextView imeSeta;
 		public TextView autorSeta;
+		public Button onOfSet;
 	}
 
 }

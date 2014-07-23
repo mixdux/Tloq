@@ -13,6 +13,7 @@ public class PitanjeStat implements Serializable{
 	private int brojNetacnihOdgovora;
 	private boolean aktivno;
 	private int vremeZaOdgovor;
+	private Pitanje pitanje;
 
 	public int getVremeZaOdgovor() {
 		return vremeZaOdgovor;
@@ -21,8 +22,6 @@ public class PitanjeStat implements Serializable{
 	public void setVremeZaOdgovor(int vremeZaOdgovor) {
 		this.vremeZaOdgovor = vremeZaOdgovor;
 	}
-
-	private Pitanje pitanje;
 
 	public PitanjeStat(Pitanje pitanje) {
 		brojTacnihOdgovora = 0;

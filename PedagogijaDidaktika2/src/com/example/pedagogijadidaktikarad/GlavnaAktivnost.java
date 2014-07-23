@@ -113,6 +113,7 @@ public class GlavnaAktivnost extends Activity {
 				DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
 				List<PitanjeStat> pist = dbb.vratiSvaPitanja(false);
 				String imeOpstegSeta = "Opšta pitanja";
+//Optimizuj kad se stvara generic set
 				if (!dbb.daLiPostojiSetSaImenom(imeOpstegSeta)){
 					dbb.dodajGenericSetPitanja(imeOpstegSeta);
 				}

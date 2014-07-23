@@ -69,7 +69,7 @@ public class SetPitanja implements Serializable{
 			auid += Pitanje.dajSekundeOdPocetkaDana() + "-";
 			auid += Kontroler.vratiObjekat().getAktivniKorisnik();
 			Random rand = new Random();
-			auid += "-" + 10000 + rand.nextInt(86400-10000);
+			auid += "-" + (10000 + rand.nextInt(86400-10000));
 			return auid;
 	}
 	

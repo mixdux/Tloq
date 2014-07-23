@@ -1,11 +1,13 @@
 package com.example.pedagogijadidaktika2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import com.example.pedagogijadidaktikarad.PitanjeAktivnost;
 
 import domen.PitanjeStat;
+import domen.SetPitanja;
 import poslovnaLogika.DatabaseBroker;
 import poslovnaLogika.KolekcijaStatPitanja;
 import poslovnaLogika.Kontroler;
@@ -25,10 +27,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.ExpandableListView.OnGroupCollapseListener;
+import android.widget.ExpandableListView.OnGroupExpandListener;
+import android.widget.RelativeLayout;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +46,7 @@ public class PregledPitanja extends Activity {
 
 	AdapterProsiriveListe adapter;
 	ExpandableListView lista;
+	final Activity ovaSama = this;
 
 	boolean longHoldShield = false;
 
@@ -48,10 +57,11 @@ public class PregledPitanja extends Activity {
 
 		//final List<PitanjeStat> svaPitanjaUBazi = new DatabaseBroker(this).vratiSvaPitanja(false);
 		final HashMap<String, List<PitanjeStat>> pitanjaISetovi = new DatabaseBroker(this).vratiSetIPitanja();
-
-		lista = (ExpandableListView) this.findViewById(R.id.listaPitanjaMain);
-		adapter = new AdapterProsiriveListe(this, new DatabaseBroker(this).vratiSveSetove(), pitanjaISetovi);
+		final List<SetPitanja> sviSetovi = new DatabaseBroker(this).vratiSveSetove();		
+		lista = (ExpandableListView) findViewById(R.id.listaPitanjaMain);
+		adapter = new AdapterProsiriveListe(this, sviSetovi, pitanjaISetovi);
 		lista.setAdapter(adapter);
+		final List<Integer> expandovani = new ArrayList<Integer>();
 
 		final Vibrator vibrator = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
@@ -63,8 +73,7 @@ public class PregledPitanja extends Activity {
 			public void onClick(View v) {
 				Intent opcijePitanja = new Intent(getApplicationContext(),
 						OpcijePitanja.class);
-				opcijePitanja.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-						| Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+				opcijePitanja.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 				getApplicationContext().startActivity(opcijePitanja);
 			}
 		});
@@ -76,12 +85,16 @@ public class PregledPitanja extends Activity {
             public boolean onChildClick(ExpandableListView parent, View v,
                     int groupPosition, int childPosition, long id) {
             	Button b = (Button) v.findViewById(R.id.onOfMarker);
+            	View group = adapter.getGroupView(groupPosition, true, null, null);
+            	Button bh = (Button) group.findViewById(R.id.onOfHeadingMarker);
 				if (!longHoldShield) {
 					vibrator.vibrate(50);
 					ColorDrawable buttonColor = (ColorDrawable) b
 							.getBackground();
 					int color = buttonColor.getColor();
 					PitanjeStat pit = (PitanjeStat) adapter.getChild(groupPosition, childPosition);
+					String AUIDSeta = sviSetovi.get(groupPosition).getAUIDseta();
+					List<PitanjeStat> dobijenaPitanja = pitanjaISetovi.get(AUIDSeta);
 					if (color == Color.BLUE) {
 						b.setBackgroundColor(Color.RED);
 						new DatabaseBroker(getApplicationContext())
@@ -99,13 +112,74 @@ public class PregledPitanja extends Activity {
 						Kontroler.vratiObjekat().getKolekcijaStatPitanja()
 								.DodajPitanje(pit);
 					}
+					adapter.notifyDataSetChanged();
 				} else {
 					longHoldShield = false;
 				}
                 return true;
             }
         });
+		
+		lista.setOnGroupExpandListener(new OnGroupExpandListener() {
+			@Override
+			public void onGroupExpand(int groupPosition) {
+				if (!expandovani.contains(groupPosition)){
+					expandovani.add(groupPosition);	
+				}
+			}
+		});
+		lista.setOnGroupCollapseListener(new OnGroupCollapseListener() {
+			@Override
+			public void onGroupCollapse(int groupPosition) {
+				if (expandovani.contains(groupPosition)){
+				expandovani.remove(groupPosition);
+				}
+			}
+		});
 
+		lista.setOnItemLongClickListener(new OnItemLongClickListener() {
+		      @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+			@Override
+		      public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		          int itemType = ExpandableListView.getPackedPositionType(id);
+		          if(itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+		        	  //longHoldShield=true;
+		              int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+		              View group = adapter.getGroupView(groupPosition, true, null, null);
+		              Button bh = (Button) group.findViewById(R.id.onOfHeadingMarker);
+		              String AUIDSeta = sviSetovi.get(groupPosition).getAUIDseta();
+		              List<PitanjeStat> dobijenaPitanja = pitanjaISetovi.get(AUIDSeta);
+		              ColorDrawable buttonColor = (ColorDrawable) bh.getBackground();
+		              int color = buttonColor.getColor();
+		              DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
+		              if (color == Color.BLUE) {
+		            	  for (PitanjeStat pit : dobijenaPitanja){
+		            		dbb.updateAktivno(false, pit.getPitanje()
+											.getJedinstveniIDikada());
+							pit.setAktivno(false);
+							Kontroler.vratiObjekat().getKolekcijaStatPitanja()
+									.izbaciStatPitanje(pit);
+		            	  }
+						} else {
+							for (PitanjeStat pit : dobijenaPitanja){
+							dbb.updateAktivno(true, pit.getPitanje()
+											.getJedinstveniIDikada());
+							pit.setAktivno(true);
+							Kontroler.vratiObjekat().getKolekcijaStatPitanja()
+									.DodajPitanje(pit);
+							}
+						}
+		              adapter = new AdapterProsiriveListe(ovaSama, dbb.vratiSveSetove(), dbb.vratiSetIPitanja());
+		              lista.setAdapter(adapter);
+		              for (Integer i : expandovani){
+		            	  int in = i.intValue();
+		            	  lista.expandGroup(in);
+		              }
+		              return true;
+		          }
+		          return false;
+		      }
+		  });
 		
 		/*lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -161,7 +235,7 @@ public class PregledPitanja extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//adapter = new AdapterListe(this, new DatabaseBroker(this).vratiSvaPitanja(false), false);
+		adapter = new AdapterProsiriveListe(this, new DatabaseBroker(this).vratiSveSetove(),  new DatabaseBroker(this).vratiSetIPitanja());
 		lista.setAdapter(adapter);
 	}
 

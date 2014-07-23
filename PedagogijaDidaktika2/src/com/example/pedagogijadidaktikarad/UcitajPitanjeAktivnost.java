@@ -76,8 +76,10 @@ public class UcitajPitanjeAktivnost extends Activity {
 				SetPitanja selektovaniSet = (SetPitanja) setoviDD.getSelectedItem();
 				if (selektovaniSet.getAUIDseta()==null){
 					tvSet.setEnabled(true);
+					tvSet.setText("");
 				} else {
 					tvSet.setEnabled(false);
+					tvSet.setText(selektovaniSet.getImeSeta());
 				}
 			}
 

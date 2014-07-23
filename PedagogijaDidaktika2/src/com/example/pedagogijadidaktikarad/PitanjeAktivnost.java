@@ -46,8 +46,7 @@ public class PitanjeAktivnost extends Activity {
 		Log.i(Konstante.TAG, "Usao u onCreate");
 		setContentView(R.layout.activity_pitanje_aktivnost);
 
-		final boolean pozvanIzGlavne = this.getIntent().getExtras()
-				.getBoolean(("pozvanIzGlavne"));
+		final boolean pozvanIzGlavne = this.getIntent().getExtras().getBoolean(("pozvanIzGlavne"));
 
 		tvPrikazPitanja = (TextView) findViewById(R.id.tvPrikazPitanja);
 		bOdgovor1 = (Button) findViewById(R.id.jbOdgovor1);
@@ -57,8 +56,7 @@ public class PitanjeAktivnost extends Activity {
 		bpovratak = (Button) findViewById(R.id.jbPovratak);
 		Log.i(Konstante.TAG, "Povezao se sa formom");
 
-		List<PitanjeStat> pitanja = Kontroler.vratiObjekat()
-				.getKolekcijaStatPitanja().getPitanja();
+		List<PitanjeStat> pitanja = Kontroler.vratiObjekat().getKolekcijaStatPitanja().getPitanja();
 
 		if (pitanja.size() == 0) {
 			DatabaseBroker dbb = new DatabaseBroker(this);
@@ -272,8 +270,11 @@ public class PitanjeAktivnost extends Activity {
 			PitanjeStat kandidat = pitanja.get(randomPosition);
 			int[] odgovori = new int[] { kandidat.getBrojTacnihOdgovora(),
 					kandidat.getBrojNetacnihOdgovora() };
-			if (odgovori[0] == 0 || odgovori[1] == 0) {
+			if (odgovori[0] == 0 && odgovori[1] == 0) {
 				if (Math.random() > 0.5d)
+					return kandidat;
+			} else if (odgovori[0] == 0){
+				if (Math.random() > 0.2d)
 					return kandidat;
 			} else {
 				double sansaZaNEDolazenjem = (double) odgovori[0]
