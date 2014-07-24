@@ -17,13 +17,26 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseBroker {
 	
+	private static DatabaseBroker dbbroker;
+	
 	private SQLiteDatabase database;
 	private DatabseCreator dbHelper;
 	private String column = DatabseCreator.COLUMN_ID;
 
-	public DatabaseBroker(Context context) {
+	public static DatabaseBroker vratiInstancu(Context... cntx){
+		if (dbbroker == null) {
+			dbbroker = new DatabaseBroker(cntx[0]);
+		}
+		return dbbroker;
+	}
+	
+	private DatabaseBroker(Context context) {
 		dbHelper = new DatabseCreator(context);
 		database = dbHelper.getWritableDatabase();
+		if(!daLiPostojiSetSaImenom("Opšta pitanja")){
+			dodajGenericSetPitanja("Opšta pitanja");
+		}
+		
 	}
 
 	public SQLiteDatabase getDatabase() {
@@ -60,7 +73,6 @@ public class DatabaseBroker {
 		values.put(DatabseCreator.VREMEODGOVORA, pitanje.getVremeZaOdgovor());
 
 		long i = database.insert(DatabseCreator.IME_TABELE, null, values);
-		database.close();
 	}
 	
 	//Može da se optimizuje ako se iskopira logika od vratiSvaPitanja i da se u toku kreiranja pitanja izvuče i set

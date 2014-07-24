@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabseCreator extends SQLiteOpenHelper {
+	
+	private Context cont;
 
 	private static final int DATABASE_VERSION = 2;
 	public static final String DATABASE_NAME = "PitanjaDB";
@@ -81,7 +83,6 @@ public class DatabseCreator extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_PITANJA);
 		db.execSQL(CREATE_SET);
-		//db.execSQL(CREATE_PRIPADA);
 	}
 
 	@Override

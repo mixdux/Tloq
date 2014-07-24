@@ -40,7 +40,6 @@ public class UcitajPitanjeAktivnost extends Activity {
 	private Button bNazad;
 	private String tac, odg1, odg2, odg3, odg4, mTekstPitanje, razrada;
 	final String TAG = "PedagogijaSaDidaktikom";
-	private DatabaseBroker dbb;
 	private ArrayAdapter<SetPitanja> adapter;
 	private Activity trenutniActivity;
 	
@@ -51,7 +50,6 @@ public class UcitajPitanjeAktivnost extends Activity {
 		trenutniActivity = this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ucitaj_pitanje_aktivnost);
-		dbb = new DatabaseBroker(getApplicationContext());
 		final View rootView = (View) findViewById(R.id.container);
 		final EditText tvPitanje = (EditText) findViewById(R.id.etTekstPitanja);
 		final EditText tvOdg1 = (EditText) findViewById(R.id.etOdgovor1);
@@ -64,7 +62,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 		final EditText tvSet = (EditText) findViewById(R.id.unosNovogSeta);
 		List<SetPitanja> setovi = new ArrayList<SetPitanja>();
 		setovi.add(new SetPitanja(null, null, "Novi set"));
-		setovi.addAll(dbb.vratiSveSetove());
+		setovi.addAll(DatabaseBroker.vratiInstancu(this).vratiSveSetove());
 		adapter = new ArrayAdapter<SetPitanja>(this, android.R.layout.simple_spinner_item, setovi);
 		setoviDD.setAdapter(adapter);
 
@@ -155,9 +153,9 @@ public class UcitajPitanjeAktivnost extends Activity {
 							.show();
 
 				if (!tacno
-						|| (mTekstPitanje.equals("") || odg1.equals("")
-								|| odg2.equals("") || odg3.equals("") || odg4
-									.equals(""))) {
+						|| (mTekstPitanje.trim().equals("") || odg1.trim().equals("")
+								|| odg2.trim().equals("") || odg3.trim().equals("") || odg4.trim()
+									.equals("") || tvSet.getText().toString().trim().equals(""))) {
 					Toast.makeText(getApplicationContext(),
 							"Ni jedno polje ne sme biti prazno",
 							Toast.LENGTH_LONG).show();
@@ -166,11 +164,12 @@ public class UcitajPitanjeAktivnost extends Activity {
 					if (promeniPitanje) {
 						PitanjeStat pist = proveriPromene(pitanjeKontejner.get(0));
 						if(pist!=null){
-						if (dbb.promeniPitanje(pist));
+						if (DatabaseBroker.vratiInstancu().promeniPitanje(pist));
 						Toast.makeText(getApplicationContext(), "Pitanje je uspešno promenjeno!",
 								Toast.LENGTH_SHORT).show();
-						Kontroler.vratiObjekat().getKolekcijaStatPitanja().izbaciStatPitanje(pitanjeKontejner.get(0));
-						Kontroler.vratiObjekat().getKolekcijaStatPitanja().DodajPitanje(pist);
+						setResult(11);
+						/*Kontroler.vratiObjekat().getKolekcijaStatPitanja().izbaciStatPitanje(pitanjeKontejner.get(0));
+						Kontroler.vratiObjekat().getKolekcijaStatPitanja().DodajPitanje(pist);*/
 						finish();
 						}
 						else {
@@ -203,14 +202,14 @@ public class UcitajPitanjeAktivnost extends Activity {
 				 */
 				PitanjeStat novoPitanje = new PitanjeStat(pitanje);
 				try {
-					dbb.dodajPitanje(novoPitanje);
+					DatabaseBroker.vratiInstancu().dodajPitanje(novoPitanje);
 				} catch (Exception ex) {
 					Toast.makeText(getApplicationContext(),
 							"Nesto je poslo po zlu sa cuvanjem fajla",
 							Toast.LENGTH_LONG).show();
 				}
 				data.putExtra("myobj", novoPitanje);
-				setResult(Activity.RESULT_OK, data);
+				setResult(Activity.RESULT_OK);
 				finish();
 			}
 
@@ -230,7 +229,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 	}
 
 	private void popuniPromeni(PitanjeStat pitanjePromena) {
-		SetPitanja AUIDiSet = dbb.vratiSetSaAUID(pitanjePromena.getPitanje().getIdSeta());
+		SetPitanja AUIDiSet = DatabaseBroker.vratiInstancu().vratiSetSaAUID(pitanjePromena.getPitanje().getIdSeta());
 		int pos = adapter.getPosition(AUIDiSet);
 		setoviDD.setSelection(pos);
 		
@@ -292,7 +291,7 @@ public class UcitajPitanjeAktivnost extends Activity {
 		SetPitanja setPitanja = (SetPitanja) setoviDD.getSelectedItem();
 		String idOdabranogSeta = setPitanja.getAUIDseta();
 		if (idOdabranogSeta==null){
-			idOdabranogSeta = dbb.ubaciSetPitanja(((EditText) findViewById(R.id.unosNovogSeta)).getText().toString());
+			idOdabranogSeta = DatabaseBroker.vratiInstancu().ubaciSetPitanja(((EditText) findViewById(R.id.unosNovogSeta)).getText().toString());
 			if (idOdabranogSeta == null){
 				return null;
 			}

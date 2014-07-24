@@ -1,3 +1,24 @@
+
+/* TO DO
+ * 
+ * DBB kao Singleton (da mu se svuda pristupa preko samo jedne instance)
+ * Osposobiti Lock screen
+ * Log-in screen
+ * Potpuno implementirati setove (batch delete i ostale opcije iz Opširnije)
+ * 
+ * ^ hendlovati editovanje seta i pitanja samo od strane kreatora korisnika (menjaj UUID promenjenog seta od strane 2. korisnika)
+ * ^^ mrdanje pitanja iz seta u set
+ * Swipe right ka Opširnije
+ * Kreator da da permisije drugim korisnicima (čitaj: doda na listu kontribjutora) 
+ * DIZAJN
+ * 
+ * 
+ * Share seta
+ * Online praćenje napretka
+ * 
+ * 
+ */
+
 package com.example.pedagogijadidaktikarad;
 
 import java.io.EOFException;
@@ -38,7 +59,7 @@ public class GlavnaAktivnost extends Activity {
 	public Button bOdgovarajNaPitanja;
 	public Button bKaListiPitanja;
 	public static final String FILENAME = "SaveFileForMyApp.bin";
-	private KolekcijaStatPitanja ksp;
+	//private KolekcijaStatPitanja ksp;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +78,9 @@ public class GlavnaAktivnost extends Activity {
 			// zapocinje ucitavanje kolekcije pitanja iz fajla, ukoliko fajl ne
 			// postoji
 			// vraca null vrednost i ceka da se zavrsi ucitavanje prvog pitanja
-			ksp = UcitajPitanja();
-			if (ksp.BrojPitanja()!=0) {
-				Kontroler.vratiObjekat().UcitajStatPitanja(ksp);
+			//ksp = UcitajPitanja();
+			if (UcitajPitanja().BrojPitanja()!=0) {
+				//Kontroler.vratiObjekat().UcitajStatPitanja(ksp);
 				Toast.makeText(this, "Pitanja uspešno učitana iz baze",
 						Toast.LENGTH_SHORT).show();
 			} else {
@@ -86,12 +107,15 @@ public class GlavnaAktivnost extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if (Kontroler.vratiObjekat().getKolekcijaStatPitanja()
-						.BrojPitanja() == 0) {
+				try{
+				if (UcitajPitanja().BrojPitanja() == 0) {
 					Toast.makeText(getApplicationContext(),
 							"Pitanja nisu učitana, molimo učitajte.",
 							Toast.LENGTH_SHORT).show();
 					return;
+				}
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
 				}
 				Log.i(Konstante.TAG, "Dugme stisnuto");
 				Intent odgovarajPitanje = new Intent(v.getContext(),
@@ -110,13 +134,7 @@ public class GlavnaAktivnost extends Activity {
 		bKaListiPitanja.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
-				List<PitanjeStat> pist = dbb.vratiSvaPitanja(false);
-				String imeOpstegSeta = "Opšta pitanja";
-//Optimizuj kad se stvara generic set
-				if (!dbb.daLiPostojiSetSaImenom(imeOpstegSeta)){
-					dbb.dodajGenericSetPitanja(imeOpstegSeta);
-				}
+				List<PitanjeStat> pist = DatabaseBroker.vratiInstancu().vratiSvaPitanja(false);
 				if (pist.size() == 0) {
 					Toast.makeText(getApplicationContext(),
 							"Ne postoje pitanja u bazi, molimo učitajte.",
@@ -132,8 +150,7 @@ public class GlavnaAktivnost extends Activity {
 
 	public KolekcijaStatPitanja UcitajPitanja() throws Exception {
 		try {
-			DatabaseBroker dbb = new DatabaseBroker(this);
-			return new KolekcijaStatPitanja(dbb.vratiSvaPitanja(true));
+			return new KolekcijaStatPitanja(DatabaseBroker.vratiInstancu(this).vratiSvaPitanja(true));
 		} catch (Exception ex) {
 			throw new Exception("Nesto je poslo po zlu sa čitanjem iz baze");
 		}
@@ -144,8 +161,7 @@ public class GlavnaAktivnost extends Activity {
 		switch (requestCode){
 		case 1:
 			if (resultCode == RESULT_OK) {
-				PitanjeStat pitanje = (PitanjeStat) data.getSerializableExtra("myobj");
-				Kontroler.vratiObjekat().dodajStatPitanje(pitanje);
+				Toast.makeText(this, "Pitanje je uspešno sačuvano!", Toast.LENGTH_SHORT).show();
 			}
 			if (resultCode == RESULT_CANCELED) {
 				// Write your code if there's no result
@@ -153,7 +169,7 @@ public class GlavnaAktivnost extends Activity {
 		break;
 
 		case 2:
-			Toast.makeText(this, "Sesija odgovaranja uspešno završena",
+			Toast.makeText(this, "Sesija odgovaranja uspešno završena!",
 					Toast.LENGTH_SHORT).show();
 		break;
 		

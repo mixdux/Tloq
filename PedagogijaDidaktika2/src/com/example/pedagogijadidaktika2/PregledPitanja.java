@@ -56,8 +56,8 @@ public class PregledPitanja extends Activity {
 		setContentView(R.layout.activity_pregled_pitanja);
 
 		//final List<PitanjeStat> svaPitanjaUBazi = new DatabaseBroker(this).vratiSvaPitanja(false);
-		final HashMap<String, List<PitanjeStat>> pitanjaISetovi = new DatabaseBroker(this).vratiSetIPitanja();
-		final List<SetPitanja> sviSetovi = new DatabaseBroker(this).vratiSveSetove();		
+		final HashMap<String, List<PitanjeStat>> pitanjaISetovi = DatabaseBroker.vratiInstancu(this).vratiSetIPitanja();
+		final List<SetPitanja> sviSetovi = DatabaseBroker.vratiInstancu().vratiSveSetove();		
 		lista = (ExpandableListView) findViewById(R.id.listaPitanjaMain);
 		adapter = new AdapterProsiriveListe(this, sviSetovi, pitanjaISetovi);
 		lista.setAdapter(adapter);
@@ -73,8 +73,8 @@ public class PregledPitanja extends Activity {
 			public void onClick(View v) {
 				Intent opcijePitanja = new Intent(getApplicationContext(),
 						OpcijePitanja.class);
-				opcijePitanja.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-				getApplicationContext().startActivity(opcijePitanja);
+				//opcijePitanja.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+				startActivityForResult(opcijePitanja, 1);
 			}
 		});
 
@@ -97,20 +97,20 @@ public class PregledPitanja extends Activity {
 					List<PitanjeStat> dobijenaPitanja = pitanjaISetovi.get(AUIDSeta);
 					if (color == Color.BLUE) {
 						b.setBackgroundColor(Color.RED);
-						new DatabaseBroker(getApplicationContext())
+						DatabaseBroker.vratiInstancu()
 								.updateAktivno(false, pit.getPitanje()
 										.getJedinstveniIDikada());
 						pit.setAktivno(false);
-						Kontroler.vratiObjekat().getKolekcijaStatPitanja()
-								.izbaciStatPitanje(pit);
+						/*Kontroler.vratiObjekat().getKolekcijaStatPitanja()
+								.izbaciStatPitanje(pit);*/
 					} else {
 						b.setBackgroundColor(Color.BLUE);
-						new DatabaseBroker(getApplicationContext())
+						DatabaseBroker.vratiInstancu()
 								.updateAktivno(true, pit.getPitanje()
 										.getJedinstveniIDikada());
 						pit.setAktivno(true);
-						Kontroler.vratiObjekat().getKolekcijaStatPitanja()
-								.DodajPitanje(pit);
+						/*Kontroler.vratiObjekat().getKolekcijaStatPitanja()
+								.DodajPitanje(pit);*/
 					}
 					adapter.notifyDataSetChanged();
 				} else {
@@ -132,7 +132,7 @@ public class PregledPitanja extends Activity {
 			@Override
 			public void onGroupCollapse(int groupPosition) {
 				if (expandovani.contains(groupPosition)){
-				expandovani.remove(groupPosition);
+				expandovani.remove((Integer)groupPosition);
 				}
 			}
 		});
@@ -151,25 +151,24 @@ public class PregledPitanja extends Activity {
 		              List<PitanjeStat> dobijenaPitanja = pitanjaISetovi.get(AUIDSeta);
 		              ColorDrawable buttonColor = (ColorDrawable) bh.getBackground();
 		              int color = buttonColor.getColor();
-		              DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
 		              if (color == Color.BLUE) {
 		            	  for (PitanjeStat pit : dobijenaPitanja){
-		            		dbb.updateAktivno(false, pit.getPitanje()
+		            		  DatabaseBroker.vratiInstancu().updateAktivno(false, pit.getPitanje()
 											.getJedinstveniIDikada());
 							pit.setAktivno(false);
-							Kontroler.vratiObjekat().getKolekcijaStatPitanja()
-									.izbaciStatPitanje(pit);
+							/*Kontroler.vratiObjekat().getKolekcijaStatPitanja()
+									.izbaciStatPitanje(pit);*/
 		            	  }
 						} else {
 							for (PitanjeStat pit : dobijenaPitanja){
-							dbb.updateAktivno(true, pit.getPitanje()
+								DatabaseBroker.vratiInstancu().updateAktivno(true, pit.getPitanje()
 											.getJedinstveniIDikada());
 							pit.setAktivno(true);
-							Kontroler.vratiObjekat().getKolekcijaStatPitanja()
-									.DodajPitanje(pit);
+							/*Kontroler.vratiObjekat().getKolekcijaStatPitanja()
+									.DodajPitanje(pit);*/
 							}
 						}
-		              adapter = new AdapterProsiriveListe(ovaSama, dbb.vratiSveSetove(), dbb.vratiSetIPitanja());
+		              adapter = new AdapterProsiriveListe(ovaSama, DatabaseBroker.vratiInstancu().vratiSveSetove(), DatabaseBroker.vratiInstancu().vratiSetIPitanja());
 		              lista.setAdapter(adapter);
 		              for (Integer i : expandovani){
 		            	  int in = i.intValue();
@@ -231,12 +230,22 @@ public class PregledPitanja extends Activity {
 		});*/
 
 	}
-
+	
 	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+			if (resultCode == RESULT_OK) {
+				adapter = new AdapterProsiriveListe(this, DatabaseBroker.vratiInstancu().vratiSveSetove(),  DatabaseBroker.vratiInstancu().vratiSetIPitanja());
+				lista.setAdapter(adapter);
+			} else {
+				// Pitanja nisu menjana
+			}
+	}
+
+	/*@Override
 	protected void onResume() {
 		super.onResume();
-		adapter = new AdapterProsiriveListe(this, new DatabaseBroker(this).vratiSveSetove(),  new DatabaseBroker(this).vratiSetIPitanja());
+		adapter = new AdapterProsiriveListe(this, DatabaseBroker.vratiInstancu().vratiSveSetove(),  DatabaseBroker.vratiInstancu().vratiSetIPitanja());
 		lista.setAdapter(adapter);
-	}
+	}*/
 
 }

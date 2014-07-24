@@ -31,6 +31,8 @@ import android.widget.Toast;
 import android.os.Build;
 
 public class OpcijePitanja extends Activity {
+	
+	//UPDATE PITANjA U KONTROLERU
 
 	AdapterListe adapter;
 	ListView lista;
@@ -44,7 +46,7 @@ public class OpcijePitanja extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_opcije_pitanja);
-		svaPitanjaUBazi.addAll((new DatabaseBroker(this)).vratiSvaPitanja(false));
+		svaPitanjaUBazi.addAll(DatabaseBroker.vratiInstancu(this).vratiSvaPitanja(false));
 		Button obrisi = (Button) findViewById(R.id.btnObrisi);
 		Button resetuj = (Button) findViewById(R.id.btnResetujStatistiku);
 		lista = (ListView) this.findViewById(R.id.listaPitanjaOpcije);
@@ -148,12 +150,11 @@ public class OpcijePitanja extends Activity {
 		builder.setMessage(poruka)
 				.setCancelable(false)
 				.setPositiveButton("Da", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());					
+					public void onClick(DialogInterface dialog, int id) {					
 						for (PitanjeStat pitanje : selektovanaPitanja){
-							dbb.resetujStatistiku(pitanje.getPitanje().getJedinstveniIDikada());
+							DatabaseBroker.vratiInstancu().resetujStatistiku(pitanje.getPitanje().getJedinstveniIDikada());
 						}
-						adapter = new AdapterListe(act, dbb.vratiSvaPitanja(false), true);
+						adapter = new AdapterListe(act, DatabaseBroker.vratiInstancu().vratiSvaPitanja(false), true);
 						lista.setAdapter(adapter);
 					}
 				});
@@ -169,10 +170,10 @@ public class OpcijePitanja extends Activity {
 	
 	private void prikaziObrisiDijalog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		String poruka = "Da li ste sigurni da �elite potpuno obrisati odabrana pitanja?";
+		String poruka = "Da li ste sigurni da želite potpuno obrisati odabrana pitanja?";
 		final boolean visePitanja;
 		if (selektovanaPitanja.size()==1){
-			poruka = "Da li ste sigurni da �elite potpuno obrisati odabrano pitanje?";
+			poruka = "Da li ste sigurni da želite potpuno obrisati odabrano pitanje?";
 			visePitanja=false;
 		} else {
 			visePitanja = true;
@@ -181,18 +182,18 @@ public class OpcijePitanja extends Activity {
 				.setCancelable(false)
 				.setPositiveButton("Da", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						DatabaseBroker dbb = new DatabaseBroker(getApplicationContext());
 						for (PitanjeStat pitanje : selektovanaPitanja){
-							dbb.obrisiPitanje(pitanje.getPitanje().getJedinstveniIDikada());
+							DatabaseBroker.vratiInstancu().obrisiPitanje(pitanje.getPitanje().getJedinstveniIDikada());
 							selektovanaPitanja.remove(pitanje);
 						}
-						adapter = new AdapterListe(act, dbb.vratiSvaPitanja(false), true);
+						adapter = new AdapterListe(act, DatabaseBroker.vratiInstancu().vratiSvaPitanja(false), true);
 						lista.setAdapter(adapter);
 						if (visePitanja){
-							Toast.makeText(getApplicationContext(), "Pitanja su uspe�no obrisana!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), "Pitanja su uspešno obrisana!", Toast.LENGTH_SHORT).show();
 						} else {
-							Toast.makeText(getApplicationContext(), "Pitanje je uspe�no obrisano!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), "Pitanje je uspešno obrisano!", Toast.LENGTH_SHORT).show();
 						}
+						setResult(Activity.RESULT_OK);
 					}
 				});
 		AlertDialog alert = builder.create();
@@ -204,14 +205,19 @@ public class OpcijePitanja extends Activity {
 
 		alert.show();
 	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == 11) {
+			svaPitanjaUBazi.clear();
+			svaPitanjaUBazi.addAll(DatabaseBroker.vratiInstancu().vratiSvaPitanja(false));
+			adapter = new AdapterListe(this,svaPitanjaUBazi, true);
+			lista.setAdapter(adapter);
+			setResult(Activity.RESULT_OK);
+		} else {
+			// Pitanje nije menjano
+		}
+}
 
-	protected void onResume() {
-		super.onResume();
-		svaPitanjaUBazi.clear();
-		svaPitanjaUBazi.addAll((new DatabaseBroker(this)).vratiSvaPitanja(false));
-		adapter = new AdapterListe(this,svaPitanjaUBazi, true);
-		lista.setAdapter(adapter);
-	}
 	
 
 }
