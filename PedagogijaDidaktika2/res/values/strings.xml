@@ -10,5 +10,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_opcije_pitanja">OpcijePitanja</string>
+    <string name="title_activity_promeni_set_pitanja">PromeniSetPitanja</string>
 
 </resources>

@@ -3,144 +3,181 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.example.pedagogijadidaktikarad.UcitajPitanjeAktivnost"
-    tools:ignore="MergeRootFrame" 
-    android:focusable="true" 
-    android:focusableInTouchMode="true">
+    tools:ignore="MergeRootFrame" >
 
-    <TextView
-        android:id="@+id/textView1"
+    <ScrollView
+        android:id="@+id/scrollViewUnosPitanja"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="Unesite tekst pitanja:" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/dugmiciUcitajLayout" >
 
-    <EditText
-        android:id="@+id/etTekstPitanja"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView1"
-        android:ems="10"
-        android:inputType="textMultiLine" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/etOdgovor1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:ems="10" />
-
-    <EditText
-        android:id="@+id/etOdgovor2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/etOdgovor1"
-        android:ems="10" />
-
-    <EditText
-        android:id="@+id/etOdgovor3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/etOdgovor2"
-        android:ems="10" />
-
-    <EditText
-        android:id="@+id/etOdgovor4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/etOdgovor3"
-        android:ems="10" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/etOdgovor1"
-        android:layout_alignParentLeft="true"
-        android:text="Unesite tekst odgovora u polja ispod, dodirom na dugme pored obeležite tačan odgovor." />
-
-    <RadioGroup
-        android:id="@+id/rgTacanOdgovor"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/etOdgovor4"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/etOdgovor1"
-        android:layout_toRightOf="@id/etOdgovor4"
-        android:orientation="vertical" >
-
-        <RadioButton
-            android:id="@+id/radioButton1"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/RelativeLayout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1" />
+            android:orientation="vertical" >
 
-        <RadioButton
-            android:id="@+id/radioButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2" />
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="10dp"
+                android:text="Unesite tekst pitanja:" />
 
-        <RadioButton
-            android:id="@+id/RadioButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3" />
+            <EditText
+                android:id="@+id/etTekstPitanja"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textView1"
+                android:ems="10"
+                android:inputType="textMultiLine" >
 
-        <RadioButton
-            android:id="@+id/RadioButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4" />
-    </RadioGroup>
+                <!-- <requestFocus /> -->
+            </EditText>
 
-    <EditText
-        android:id="@+id/etRazrada"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="22dp"
-        android:ems="10" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/etTekstPitanja"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Ovde razradite temu pitanja (opciono)" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/etRazrada"
-        android:layout_alignParentLeft="true"
-        android:text="Ovde razradite temu pitanja (opciono)" />
+            <EditText
+                android:id="@+id/etRazrada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textView3"
+                android:layout_marginBottom="22dp"
+                android:ems="10" />
 
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/etRazrada"
+                android:layout_marginLeft="10dp"
+                android:text="Unesite tekst odgovora u polja ispod, dodirom na dugme pored obeležite tačan odgovor." />
+
+            <EditText
+                android:id="@+id/etOdgovor1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textView2"
+                android:layout_marginTop="20dp"
+                android:ems="10" />
+
+            <EditText
+                android:id="@+id/etOdgovor2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/etOdgovor1"
+                android:ems="10" />
+
+            <EditText
+                android:id="@+id/etOdgovor3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/etOdgovor2"
+                android:ems="10" />
+
+            <EditText
+                android:id="@+id/etOdgovor4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/etOdgovor3"
+                android:ems="10" />
+
+            <RadioGroup
+                android:id="@+id/rgTacanOdgovor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignBottom="@+id/etOdgovor4"
+                android:layout_toRightOf="@id/etOdgovor4"
+                android:orientation="vertical" >
+
+                <RadioButton
+                    android:id="@+id/radioButton1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1" />
+
+                <RadioButton
+                    android:id="@+id/radioButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2" />
+
+                <RadioButton
+                    android:id="@+id/RadioButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3" />
+
+                <RadioButton
+                    android:id="@+id/RadioButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4" />
+            </RadioGroup>
+
+            <Spinner
+                android:id="@+id/dropDownSetovi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/etOdgovor4"
+                android:layout_toLeftOf="@+id/unosNovogSeta" />
+
+            <EditText
+                android:id="@+id/unosNovogSeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/dropDownSetovi"
+                android:layout_marginRight="10dp"
+                android:ems="10" />
+
+        </RelativeLayout>
+    </ScrollView>
+<LinearLayout 
+    android:id="@+id/dugmiciUcitajLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_margin="10dp"
+    android:gravity="bottom"
+    android:orientation="horizontal">
     <Button
         android:id="@+id/bSacuvajPitanje"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignBaseline="@+id/bNazad"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+		android:layout_weight="1"
         android:text="Snimi" />
 
     <Button
         android:id="@+id/bNazad"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_alignParentRight="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Nazad" />
-
+</LinearLayout>
 </RelativeLayout>

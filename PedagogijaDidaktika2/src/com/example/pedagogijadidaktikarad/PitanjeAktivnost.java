@@ -46,8 +46,7 @@ public class PitanjeAktivnost extends Activity {
 		Log.i(Konstante.TAG, "Usao u onCreate");
 		setContentView(R.layout.activity_pitanje_aktivnost);
 
-		final boolean pozvanIzGlavne = this.getIntent().getExtras()
-				.getBoolean(("pozvanIzGlavne"));
+		final boolean pozvanIzGlavne = this.getIntent().getExtras().getBoolean(("pozvanIzGlavne"));
 
 		tvPrikazPitanja = (TextView) findViewById(R.id.tvPrikazPitanja);
 		bOdgovor1 = (Button) findViewById(R.id.jbOdgovor1);
@@ -57,15 +56,7 @@ public class PitanjeAktivnost extends Activity {
 		bpovratak = (Button) findViewById(R.id.jbPovratak);
 		Log.i(Konstante.TAG, "Povezao se sa formom");
 
-		podesiVisinu();
-		
-		List<PitanjeStat> pitanja = Kontroler.vratiObjekat()
-				.getKolekcijaStatPitanja().getPitanja();
-
-		if (pitanja.size() == 0) {
-			DatabaseBroker dbb = new DatabaseBroker(this);
-			pitanja = dbb.vratiSvaPitanja(true);
-		}
+		List<PitanjeStat> pitanja = DatabaseBroker.vratiInstancu(this).vratiSvaPitanja(true);
 
 		final List<PitanjeStat> statPitanja = new ArrayList<PitanjeStat>();
 		Pitanje aktuelnoPitanje = null;
@@ -86,10 +77,6 @@ public class PitanjeAktivnost extends Activity {
 			break;
 		}
 		
-		if (pitanja.size()==0) {
-			
-		}
-		
 		final Vibrator vibrator = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 		
 		String tacanOdgovor = aktuelnoPitanje.getOdgovori()[Integer.parseInt(aktuelnoPitanje.getOdgovori()[0])];
@@ -104,7 +91,7 @@ public class PitanjeAktivnost extends Activity {
 		bOdgovor4.setText(odgovori.get(3));
 		tacan = odgovori.indexOf(tacanOdgovor)+1;
 		
-		podesiVisinu();
+		//podesiVisinu();
 		
 		final int vremeUcitavanja = (int) System.currentTimeMillis();
 
@@ -116,18 +103,15 @@ public class PitanjeAktivnost extends Activity {
 				| Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 		novoPitanje.putExtra("pozvanIzGlavne", pozvanIzGlavne);
 
-		final DatabaseBroker dbb = new DatabaseBroker(this);
-
 		final List<Integer> pushedAnswers = new ArrayList<Integer>();
 
 		bOdgovor1.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				int vel = bOdgovor1.getHeight();
 				if (tacan == 1) {
 					int vremeOdgovora = (int) System.currentTimeMillis();
-					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
+					DatabaseBroker.vratiInstancu().updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
 					Toast.makeText(v.getContext(), "Odgovor je tacan",
 							Toast.LENGTH_SHORT).show();
 					if (pozvanIzGlavne) {
@@ -135,14 +119,14 @@ public class PitanjeAktivnost extends Activity {
 								.startActivity(novoPitanje);
 					}
 					zavibriraj(true, vibrator);
-					dbb.updateOdgovor(true, auid);
+					DatabaseBroker.vratiInstancu().updateOdgovor(true, auid);
 					statPitanja.get(0).setBrojTacnihOdgovora(
 							statPitanja.get(0).getBrojTacnihOdgovora() + 1);
 					finish();
 				} else {
 					zavibriraj(false, vibrator);
 					if (!pushedAnswers.contains(1)) {
-						dbb.updateOdgovor(false, auid);
+						DatabaseBroker.vratiInstancu().updateOdgovor(false, auid);
 						statPitanja.get(0)
 								.setBrojNetacnihOdgovora(
 										statPitanja.get(0)
@@ -161,7 +145,7 @@ public class PitanjeAktivnost extends Activity {
 			public void onClick(View v) {
 				if (tacan == 2) {
 					int vremeOdgovora = (int) System.currentTimeMillis();
-					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
+					DatabaseBroker.vratiInstancu().updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
 					Toast.makeText(v.getContext(), "Odgovor je tacan",
 							Toast.LENGTH_SHORT).show();
 					if (pozvanIzGlavne) {
@@ -169,14 +153,14 @@ public class PitanjeAktivnost extends Activity {
 								.startActivity(novoPitanje);
 					}
 					zavibriraj(true, vibrator);
-					dbb.updateOdgovor(true, auid);
+					DatabaseBroker.vratiInstancu().updateOdgovor(true, auid);
 					statPitanja.get(0).setBrojTacnihOdgovora(
 							statPitanja.get(0).getBrojTacnihOdgovora() + 1);
 					finish();
 				} else {
 					zavibriraj(false, vibrator);
 					if (!pushedAnswers.contains(2)) {
-						dbb.updateOdgovor(false, auid);
+						DatabaseBroker.vratiInstancu().updateOdgovor(false, auid);
 						statPitanja.get(0)
 								.setBrojNetacnihOdgovora(
 										statPitanja.get(0)
@@ -195,7 +179,7 @@ public class PitanjeAktivnost extends Activity {
 			public void onClick(View v) {
 				if (tacan == 3) {
 					int vremeOdgovora = (int) System.currentTimeMillis();
-					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
+					DatabaseBroker.vratiInstancu().updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
 					Toast.makeText(v.getContext(), "Odgovor je tacan",
 							Toast.LENGTH_SHORT).show();
 					if (pozvanIzGlavne) {
@@ -203,14 +187,14 @@ public class PitanjeAktivnost extends Activity {
 								.startActivity(novoPitanje);
 					}
 					zavibriraj(true, vibrator);
-					dbb.updateOdgovor(true, auid);
+					DatabaseBroker.vratiInstancu().updateOdgovor(true, auid);
 					statPitanja.get(0).setBrojTacnihOdgovora(
 							statPitanja.get(0).getBrojTacnihOdgovora() + 1);
 					finish();
 				} else {
 					zavibriraj(false, vibrator);
 					if (!pushedAnswers.contains(3)) {
-						dbb.updateOdgovor(false, auid);
+						DatabaseBroker.vratiInstancu().updateOdgovor(false, auid);
 						statPitanja.get(0)
 								.setBrojNetacnihOdgovora(
 										statPitanja.get(0)
@@ -227,10 +211,9 @@ public class PitanjeAktivnost extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				int vel = bOdgovor1.getHeight();
 				if (tacan == 4) {
 					int vremeOdgovora = (int) System.currentTimeMillis();
-					dbb.updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
+					DatabaseBroker.vratiInstancu().updateVremeZaOdgovor(vremeOdgovora-vremeUcitavanja, auid);
 					Toast.makeText(v.getContext(), "Odgovor je tacan",
 							Toast.LENGTH_SHORT).show();
 					if (pozvanIzGlavne) {
@@ -238,14 +221,14 @@ public class PitanjeAktivnost extends Activity {
 								.startActivity(novoPitanje);
 					}
 					zavibriraj(true, vibrator);
-					dbb.updateOdgovor(true, auid);
+					DatabaseBroker.vratiInstancu().updateOdgovor(true, auid);
 					statPitanja.get(0).setBrojTacnihOdgovora(
 							statPitanja.get(0).getBrojTacnihOdgovora() + 1);
 					finish();
 				} else {
 					zavibriraj(false, vibrator);
 					if (!pushedAnswers.contains(4)) {
-						dbb.updateOdgovor(false, auid);
+						DatabaseBroker.vratiInstancu().updateOdgovor(false, auid);
 						statPitanja.get(0)
 								.setBrojNetacnihOdgovora(
 										statPitanja.get(0)
@@ -262,7 +245,7 @@ public class PitanjeAktivnost extends Activity {
 			bpovratak.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					dbb.getDatabase().close();
+					DatabaseBroker.vratiInstancu().getDatabase().close();
 					finish();
 				}
 			});
@@ -280,8 +263,11 @@ public class PitanjeAktivnost extends Activity {
 			PitanjeStat kandidat = pitanja.get(randomPosition);
 			int[] odgovori = new int[] { kandidat.getBrojTacnihOdgovora(),
 					kandidat.getBrojNetacnihOdgovora() };
-			if (odgovori[0] == 0 || odgovori[1] == 0) {
+			if (odgovori[0] == 0 && odgovori[1] == 0) {
 				if (Math.random() > 0.5d)
+					return kandidat;
+			} else if (odgovori[0] == 0){
+				if (Math.random() > 0.2d)
 					return kandidat;
 			} else {
 				double sansaZaNEDolazenjem = (double) odgovori[0]
@@ -301,7 +287,7 @@ public class PitanjeAktivnost extends Activity {
 		}
 	}
 	
-	private void podesiVisinu() {
+	/*private void podesiVisinu() {
 		LinearLayout layoutGornji = (LinearLayout) findViewById(R.id.linearGornji);
 		LinearLayout layoutDonji = (LinearLayout) findViewById(R.id.linearDonji);
 		
@@ -314,6 +300,6 @@ public class PitanjeAktivnost extends Activity {
 		} else {
 			paramsD.height=paramsG.height;
 		}
-	}
+	}*/
 
 }

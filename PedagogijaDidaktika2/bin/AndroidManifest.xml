@@ -52,7 +52,7 @@
         <activity
             android:name="com.example.pedagogijadidaktikarad.GlavnaAktivnost"
             android:label="@string/app_name" >
-"
+"
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,12 +64,16 @@
             android:label="@string/title_activity_ucitaj_pitanje_aktivnost" >
         </activity>
         <activity
-            android:name="com.example.pedagogijadidaktika2.PregledPitanja"
+            android:name=".PregledPitanja"
             android:label="@string/title_activity_pregled_pitanja" >
         </activity>
         <activity
-            android:name="com.example.pedagogijadidaktika2.OpcijePitanja"
+            android:name=".OpcijePitanja"
             android:label="@string/title_activity_opcije_pitanja" >
+        </activity>
+        <activity
+            android:name=".PromeniSetPitanja"
+            android:label="@string/title_activity_promeni_set_pitanja" >
         </activity>
     </application>
 

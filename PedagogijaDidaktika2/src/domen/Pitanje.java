@@ -1,6 +1,9 @@
 package domen;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 
@@ -13,12 +16,21 @@ public class Pitanje implements Serializable{
 	private String kreator;
 	private String pojasnjenje;
 	private String notes;
+	private String idSeta;
 	private String jedinstveniIDikada;
 	
 	public void setJedinstveniIDikada(String jedinstveniIDikada) {
 		if (this.jedinstveniIDikada.equals("")){
 		this.jedinstveniIDikada = jedinstveniIDikada;
 		}
+	}
+
+	public String getIdSeta() {
+		return idSeta;
+	}
+
+	public void setIdSeta(String idSeta) {
+		this.idSeta = idSeta;
 	}
 
 	public String getJedinstveniIDikada() {
@@ -67,19 +79,21 @@ public class Pitanje implements Serializable{
 
 	
 	
-	public Pitanje(String mTextPitanja, String[] odgovori, String kreator, String auid) {
+	public Pitanje(String mTextPitanja, String[] odgovori, String kreator, String auid, String set) {
 		super();
 		this.mTextPitanja = mTextPitanja;
 		this.odgovori = odgovori;
 		this.kreator = kreator;
 		this.pojasnjenje = "";
 		this.notes = "";
+		idSeta = set;
 		jedinstveniIDikada = auid;
 	}
 	
 	public Pitanje(){
 		odgovori = new  String[5];
 		jedinstveniIDikada = "";
+		idSeta = "";
 	}
 	
 	public static String userFriendlyKreator(String kreator){
@@ -91,5 +105,24 @@ public class Pitanje implements Serializable{
 		return kuf;
 	}
 	
+	public static String napraviAUID() {
+		String auid = "";
+		auid += new SimpleDateFormat("ddMMyyyy").format(new Date()) + "";
+		auid += dajSekundeOdPocetkaDana() + "-";
+		auid += java.util.UUID.randomUUID();
+		return auid;
+	}
+	
+	public static long dajSekundeOdPocetkaDana(){
+		Calendar c = Calendar.getInstance();
+		long now = c.getTimeInMillis();
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		long passed = now - c.getTimeInMillis();
+		long secondsPassed = passed / 1000;
+		return secondsPassed;
+	}
 	
 }

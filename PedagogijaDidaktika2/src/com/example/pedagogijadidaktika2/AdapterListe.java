@@ -132,7 +132,12 @@ public class AdapterListe extends BaseAdapter {
 		public TextView netacni;
 		public TextView vreme;
 		public TextView rejting;
-		
+		public CheckBox selectedSet;
+		public TextView imeSeta;
+		public TextView autorSeta;
+		public TextView doprinosioci;
+		public Button onOfSet;
+		public TextView sekundeOznaka;
 	}
 
 }
