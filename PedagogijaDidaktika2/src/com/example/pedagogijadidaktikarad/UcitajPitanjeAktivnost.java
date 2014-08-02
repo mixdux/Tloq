@@ -163,6 +163,9 @@ public class UcitajPitanjeAktivnost extends Activity {
 				} else {
 					if (promeniPitanje) {
 						PitanjeStat pist = proveriPromene(pitanjeKontejner.get(0));
+						if (pist.getPitanje().getIdSeta()==null){
+							return;
+						}
 						if(pist!=null){
 						if (DatabaseBroker.vratiInstancu().promeniPitanje(pist));
 						Toast.makeText(getApplicationContext(), "Pitanje je uspešno promenjeno!",
@@ -191,6 +194,9 @@ public class UcitajPitanjeAktivnost extends Activity {
 				String kreator = Kontroler.vratiObjekat().getAktivniKorisnik();
 				String auid = Pitanje.napraviAUID();
 				String idOdabranogSeta = resolveIDSeta();
+				if (idOdabranogSeta==null){
+					return;
+				}
 				Pitanje pitanje = new Pitanje(mTekstPitanje, odgovori, kreator,
 						auid, idOdabranogSeta);
 				pitanje.setPojasnjenje(razrada);
@@ -291,9 +297,13 @@ public class UcitajPitanjeAktivnost extends Activity {
 		SetPitanja setPitanja = (SetPitanja) setoviDD.getSelectedItem();
 		String idOdabranogSeta = setPitanja.getAUIDseta();
 		if (idOdabranogSeta==null){
-			idOdabranogSeta = DatabaseBroker.vratiInstancu().ubaciSetPitanja(((EditText) findViewById(R.id.unosNovogSeta)).getText().toString());
-			if (idOdabranogSeta == null){
-				return null;
+			if (((EditText) findViewById(R.id.unosNovogSeta)).getText().toString().equals(Kontroler.vratiObjekat().getImeGenericSeta())) {
+				Toast.makeText(getApplicationContext(), "Unesite drugačije ime seta", Toast.LENGTH_SHORT).show();
+			} else {
+				idOdabranogSeta = DatabaseBroker.vratiInstancu().ubaciSetPitanja(((EditText) findViewById(R.id.unosNovogSeta)).getText().toString());
+				if (idOdabranogSeta == null){
+					Toast.makeText(getApplicationContext(), "Došlo je do greške pri stvaranju novog seta", Toast.LENGTH_SHORT).show();
+				}
 			}
 		}
 		return idOdabranogSeta;

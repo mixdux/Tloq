@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.pedagogijadidaktika2.PregledPitanja$PlaceholderFragment" >
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/listaPitanjaOpcije"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:layout_above="@+id/btnObrisi"
         android:layout_marginBottom="10dp"
         android:layout_alignParentTop="true" >
-    </ListView>
+    </ExpandableListView>
 
     <Button
         android:id="@+id/btnObrisi"

@@ -39,7 +39,7 @@
                 android:ems="10"
                 android:inputType="textMultiLine" >
 
-                <requestFocus />
+                <!-- <requestFocus /> -->
             </EditText>
 
             <TextView

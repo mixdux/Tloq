@@ -1,0 +1,123 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/promeniSetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.pedagogijadidaktika2.PromeniSetPitanja" >
+
+    <ScrollView 
+        android:id="@+id/scrollViewPromeniSet"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/promenaSetaOpcije"
+        >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+        android:id="@+id/txtImeSeta"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:text="Ime seta" />
+
+    <EditText
+        android:id="@+id/editImeSeta"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtImeSeta"
+        android:layout_alignRight="@+id/txtImeSeta"
+        android:layout_below="@+id/txtImeSeta"
+        android:layout_marginTop="-10dp"
+        android:ems="10" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/txtDodajDoprinosioce"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editImeSeta"
+        android:layout_alignRight="@+id/editImeSeta"
+        android:layout_below="@+id/editImeSeta"
+        android:layout_marginTop="30dp"
+        android:text="Doprinosioci (obavezan zarez između imena)" />
+
+     <EditText
+        android:id="@+id/editDodajDoprinosioce"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtDodajDoprinosioce"
+        android:layout_alignRight="@+id/txtDodajDoprinosioce"
+        android:layout_alignLeft="@+id/txtDodajDoprinosioce"
+        android:ems="10" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/txtPomocDoprinosioci"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editDodajDoprinosioce"
+        android:layout_alignRight="@+id/editDodajDoprinosioce"
+        android:layout_below="@+id/editDodajDoprinosioce"
+        android:layout_margin="5dp"
+        android:text="Doprinosioci ovde navedeni će imati ista ovlašćenja nad setom pitnja kao i sam autor" />
+    
+    <TextView
+        android:id="@+id/txtBrojPitanja"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editDodajDoprinosioce"
+        android:layout_alignRight="@+id/editDodajDoprinosioce"
+        android:layout_below="@+id/txtPomocDoprinosioci"
+        android:layout_marginTop="10dp"
+        android:text="Broj pitanja" />
+
+    <TextView
+        android:id="@+id/txtAutorSeta"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/txtBrojPitanja"
+        android:layout_alignLeft="@+id/txtBrojPitanja"
+        android:layout_below="@+id/txtBrojPitanja"
+        android:layout_marginTop="10dp"
+        android:gravity="right"
+        android:text="Ime autora" />
+        </RelativeLayout>
+    </ScrollView>
+    
+
+    <LinearLayout
+        android:id="@+id/promenaSetaOpcije"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+
+    <Button
+        android:id="@+id/usnimiPromenljeniSet"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Snimi" />
+
+    <Button
+        android:id="@+id/nazadIzSeta"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Nazad" />
+	</LinearLayout>
+    
+</RelativeLayout>

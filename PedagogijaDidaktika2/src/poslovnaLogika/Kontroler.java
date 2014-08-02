@@ -16,6 +16,7 @@ public class Kontroler {
 	private KolekcijaPitanja kolekcijaPitanja;
 	private KolekcijaStatPitanja kolekcijaStatPitanja;
 	private String aktivniKorisnik;
+	private String imeGenericSeta;
 	
 	private Kontroler() {
 		kolekcijaPitanja = new KolekcijaPitanja();
@@ -59,6 +60,14 @@ public class Kontroler {
 
 	public void setAktivniKorisnik(String aktivniKorisnik) {
 		this.aktivniKorisnik = aktivniKorisnik;
+	}
+
+	public String getImeGenericSeta() {
+		return imeGenericSeta;
+	}
+
+	public void setImeGenericSeta(String imeGenericSeta) {
+		this.imeGenericSeta = imeGenericSeta;
 	}
 
 	public Pitanje vratiPitanje() throws RuntimeException {

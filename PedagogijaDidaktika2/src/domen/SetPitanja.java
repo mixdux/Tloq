@@ -84,7 +84,8 @@ public class SetPitanja implements Serializable{
 			return false;
 		}
 		SetPitanja sp = (SetPitanja) o;
-		return this.AUIDseta.equals(sp.AUIDseta);
+		boolean jednako = this.AUIDseta.equals(sp.AUIDseta);
+		return jednako;
 	}
 	
 }

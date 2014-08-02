@@ -9,21 +9,22 @@
         android:id="@+id/imeSeta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
        	android:layout_marginLeft="40dp"
+       	android:layout_marginRight="10dp"
        	android:layout_marginTop="10dp"
-       	android:layout_marginBottom="20dp"
-        android:layout_toLeftOf="@+id/autorSeta"
+       	android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@+id/onOfHeadingMarker"
         android:text="Ime seta" />
 
     <TextView
         android:id="@+id/autorSeta"
-        android:layout_alignBaseline="@+id/imeSeta"
-        android:layout_margin="10dp"
-        android:paddingBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imeSeta"
+        android:layout_below="@+id/imeSeta"
+        android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/onOfHeadingMarker"
+        android:paddingBottom="10dp"
         android:text="Autor seta" />
     
     <Button

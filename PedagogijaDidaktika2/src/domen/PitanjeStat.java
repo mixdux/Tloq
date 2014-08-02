@@ -70,5 +70,14 @@ public class PitanjeStat implements Serializable{
 	public void setPitanje(Pitanje pitanje) {
 		this.pitanje = pitanje;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof PitanjeStat)){
+			return false;
+		}
+		PitanjeStat sp = (PitanjeStat) o;
+		return this.pitanje.getJedinstveniIDikada().equals(sp.getPitanje().getJedinstveniIDikada());
+	}
 
 }

@@ -33,8 +33,8 @@ public class DatabaseBroker {
 	private DatabaseBroker(Context context) {
 		dbHelper = new DatabseCreator(context);
 		database = dbHelper.getWritableDatabase();
-		if(!daLiPostojiSetSaImenom("Opšta pitanja")){
-			dodajGenericSetPitanja("Opšta pitanja");
+		if(!daLiPostojiSetSaImenom(Kontroler.vratiObjekat().getImeGenericSeta())){
+			dodajGenericSetPitanja(Kontroler.vratiObjekat().getImeGenericSeta());
 		}
 		
 	}
@@ -290,5 +290,59 @@ public class DatabaseBroker {
 		return false;
 	}
 	
+	public List<PitanjeStat> vratiPitanjaZaSet(String AUIDseta){
+		List<PitanjeStat> listaPitanja = new ArrayList<PitanjeStat>();
+		String selectQuery = "SELECT  * FROM " + DatabseCreator.IME_TABELE + " WHERE " + DatabseCreator.ID_SETA + "=?";
+		Cursor cursor = database.rawQuery(selectQuery, new String[] { AUIDseta });
+		if (cursor.moveToFirst()) {
+			do {
+				Pitanje pit = new Pitanje();
+				pit.setmTextPitanja(cursor.getString(1));
+				pit.setOdgovori(new String[] { cursor.getString(2),
+						cursor.getString(3), cursor.getString(4),
+						cursor.getString(5), cursor.getString(6) });
+				pit.setKreator(cursor.getString(8));
+				pit.setPojasnjenje(cursor.getString(12));
+				pit.setNotes(cursor.getString(13));
+				pit.setJedinstveniIDikada(cursor.getString(14));
+				pit.setIdSeta(cursor.getString(15));
+				PitanjeStat pitStat = new PitanjeStat(pit);
+				pitStat.setBrojTacnihOdgovora(cursor.getInt(9));
+				pitStat.setBrojNetacnihOdgovora(cursor.getInt(10));
+				int aktivno = cursor.getInt(7);
+				if (aktivno == 0)
+					pitStat.setAktivno(false);
+				else
+					pitStat.setAktivno(true);
+				pitStat.setVremeZaOdgovor(cursor.getInt(11));
+				listaPitanja.add(pitStat);
+			} while (cursor.moveToNext());
+		}
+		return listaPitanja;
+	}
+	
+	public boolean promeniSet(SetPitanja set, String imeSeta, String doprinosioci){
+		ContentValues args = new ContentValues();
+		args.put(DatabseCreator.IME_SETA, imeSeta);
+		String doprinosiociNovi = doprinosioci + ";"+ set.getImeDoprinosioca();
+		if (set.getImeDoprinosioca().contains(";")){
+			doprinosiociNovi = set.getImeDoprinosioca().replace(set.getImeDoprinosioca().split(";")[0], doprinosioci);
+		}
+		args.put(DatabseCreator.IME_DOPRINOSIOCA,  doprinosiociNovi);
+		long i = database.update(DatabseCreator.IME_SET_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { set.getAUIDseta() });	
+		return true;
+	}
+	
+	public boolean premestiPitanje(String auidSeta, String auidPitanja){
+		ContentValues args = new ContentValues();
+		args.put(DatabseCreator.ID_SETA, auidSeta);
+		long i = database.update(DatabseCreator.IME_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { auidPitanja });	
+		return true;
+	}
+	
+	public boolean obrisiSet(String auidSeta){
+		long i = database.delete(DatabseCreator.IME_SET_TABELE,DatabseCreator.ALLUNIQUE + "=?", new String[] { auidSeta });
+		return true;
+	}
 	
 }

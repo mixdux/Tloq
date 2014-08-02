@@ -66,7 +66,7 @@ public class GlavnaAktivnost extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_glavna_aktivnost);
 		Kontroler.vratiObjekat().setAktivniKorisnik("ADMIN<dsc>_M</dsc>");
-		
+		Kontroler.vratiObjekat().setImeGenericSeta("Opšta pitanja");
 		startService(new Intent(this, TestService.class));
 		Toast.makeText(this, "Pozvan servis", Toast.LENGTH_SHORT).show();
 
@@ -135,12 +135,12 @@ public class GlavnaAktivnost extends Activity {
 			@Override
 			public void onClick(View v) {
 				List<PitanjeStat> pist = DatabaseBroker.vratiInstancu().vratiSvaPitanja(false);
-				if (pist.size() == 0) {
+				/*if (pist.size() == 0) {
 					Toast.makeText(getApplicationContext(),
 							"Ne postoje pitanja u bazi, molimo učitajte.",
 							Toast.LENGTH_SHORT).show();
 					return;
-				}
+				}*/
 				Intent listaPitanja = new Intent(v.getContext(),
 						PregledPitanja.class);
 				startActivityForResult(listaPitanja, 3);
