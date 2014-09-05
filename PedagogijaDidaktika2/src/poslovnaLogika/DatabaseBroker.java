@@ -324,9 +324,11 @@ public class DatabaseBroker {
 	public boolean promeniSet(SetPitanja set, String imeSeta, String doprinosioci){
 		ContentValues args = new ContentValues();
 		args.put(DatabseCreator.IME_SETA, imeSeta);
-		String doprinosiociNovi = doprinosioci + ";"+ set.getImeDoprinosioca();
-		if (set.getImeDoprinosioca().contains(";")){
+		String doprinosiociNovi = "";
+		if (set.getImeDoprinosioca().contains(";") && !doprinosioci.equals("")){
 			doprinosiociNovi = set.getImeDoprinosioca().replace(set.getImeDoprinosioca().split(";")[0], doprinosioci);
+		} else if (!set.getImeDoprinosioca().contains(";") && !doprinosioci.equals("")){ 
+			doprinosiociNovi = doprinosioci + ";"+ set.getImeDoprinosioca();
 		}
 		args.put(DatabseCreator.IME_DOPRINOSIOCA,  doprinosiociNovi);
 		long i = database.update(DatabseCreator.IME_SET_TABELE, args, DatabseCreator.ALLUNIQUE + "=?", new String[] { set.getAUIDseta() });	
